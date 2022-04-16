@@ -11,19 +11,10 @@
  */
 
 use super::prelude::*;
-use chess::{Board, MoveGen};
+use rand::prelude::*;
 
 #[derive(Debug, Default)]
-pub struct RandomEngine {
-    board: Board,
-}
-
-impl RandomEngine {
-    #[inline]
-    pub fn new() -> Self {
-        RandomEngine::default()
-    }
-}
+pub struct RandomEngine;
 
 impl Engine for RandomEngine {
     fn kind(&self) -> EngineKind {
@@ -38,7 +29,13 @@ impl Engine for RandomEngine {
         "Chooses a random valid move"
     }
 
-    fn reset(&mut self) {
-        self.board = Board::default();
+    fn choose_move(&self, game: &mut Game, _side: Color) -> ChessMove {
+        let mut rng = thread_rng();
+
+        *game
+            .moves()
+            .collect::<Vec<_>>()
+            .choose(&mut rng)
+            .expect("No valid moves")
     }
 }

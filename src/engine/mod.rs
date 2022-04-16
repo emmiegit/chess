@@ -12,6 +12,8 @@
 
 mod prelude {
     pub use super::{Engine, EngineKind};
+    pub use crate::game::Game;
+    pub use chess::{ChessMove, Color};
 }
 
 mod passthrough;
@@ -22,6 +24,7 @@ pub use self::passthrough::StockfishEngine;
 pub use self::random::RandomEngine;
 pub use self::worstfish::WorstfishEngine;
 
+use self::prelude::*;
 use std::convert::TryFrom;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
@@ -36,9 +39,8 @@ pub trait Engine {
     /// Returns a short constant string describing the behavior of the engine.
     fn description(&self) -> &'static str;
 
-    /// Resets the engine, preparing for a new game.
-    /// The state should be identical to constructing a new instance of the engine.
-    fn reset(&mut self);
+    /// Given this game, determine what move the engine would like to play.
+    fn choose_move(&self, game: &mut Game, side: Color) -> ChessMove;
 }
 
 #[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
@@ -59,9 +61,9 @@ impl EngineKind {
 
     pub fn build(self) -> Box<dyn Engine> {
         match self {
-            EngineKind::Random => Box::new(RandomEngine::new()),
-            EngineKind::Stockfish => Box::new(StockfishEngine::new()),
-            EngineKind::Worstfish => Box::new(WorstfishEngine::new()),
+            EngineKind::Random => Box::new(RandomEngine),
+            EngineKind::Stockfish => Box::new(StockfishEngine),
+            EngineKind::Worstfish => Box::new(WorstfishEngine),
         }
     }
 }

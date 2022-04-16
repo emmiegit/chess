@@ -41,6 +41,7 @@ pub struct Stockfish {
 }
 
 impl Stockfish {
+    // Constructor
     pub fn spawn() -> Self {
         let mut process = Command::new("stockfish")
             .stdin(Stdio::piped())
@@ -60,6 +61,7 @@ impl Stockfish {
         }
     }
 
+    // Communication
     pub fn recv_raw(&mut self) -> String {
         let mut buffer = String::new();
         recv_inner!(self, &mut buffer);
@@ -77,8 +79,6 @@ impl Stockfish {
         self.output.flush().expect("Unable to flush stockfish pipe");
     }
 
-    #[inline]
-    pub fn reset(&mut self) {
-        self.send(UciMessage::UciNewGame);
-    }
+    // Methods
+    // TODO evaluate fn
 }

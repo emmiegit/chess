@@ -11,20 +11,9 @@
  */
 
 use super::prelude::*;
-use crate::stockfish::Stockfish;
 
 #[derive(Debug)]
-pub struct StockfishEngine {
-    stockfish: Stockfish,
-}
-
-impl StockfishEngine {
-    pub fn new() -> Self {
-        StockfishEngine {
-            stockfish: Stockfish::spawn(),
-        }
-    }
-}
+pub struct StockfishEngine;
 
 impl Engine for StockfishEngine {
     fn kind(&self) -> EngineKind {
@@ -32,14 +21,14 @@ impl Engine for StockfishEngine {
     }
 
     fn name(&self) -> &'static str {
-        "Stockfish (pass-through)"
+        "Stockfish (normal)"
     }
 
     fn description(&self) -> &'static str {
-        "Dummy pass-through engine. Simply pipes Stockfish's moves as-is."
+        "Dummy engine. Returns whatever Stockfish thinks is the best move."
     }
 
-    fn reset(&mut self) {
-        self.stockfish.reset();
+    fn choose_move(&self, game: &mut Game, side: Color) -> ChessMove {
+        todo!()
     }
 }

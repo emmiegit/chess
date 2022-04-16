@@ -11,20 +11,9 @@
  */
 
 use super::prelude::*;
-use crate::stockfish::Stockfish;
 
 #[derive(Debug)]
-pub struct WorstfishEngine {
-    stockfish: Stockfish,
-}
-
-impl WorstfishEngine {
-    pub fn new() -> Self {
-        WorstfishEngine {
-            stockfish: Stockfish::spawn(),
-        }
-    }
-}
+pub struct WorstfishEngine;
 
 impl Engine for WorstfishEngine {
     fn kind(&self) -> EngineKind {
@@ -36,10 +25,10 @@ impl Engine for WorstfishEngine {
     }
 
     fn description(&self) -> &'static str {
-        "Chooses the moves Stockfish dislikes the most."
+        "Chooses the move Stockfish dislikes the most."
     }
 
-    fn reset(&mut self) {
-        self.stockfish.reset();
+    fn choose_move(&self, game: &mut Game, side: Color) -> ChessMove {
+        todo!()
     }
 }

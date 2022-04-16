@@ -13,6 +13,7 @@
 use crate::config::Configuration;
 use crate::engine::Engine;
 use crate::stockfish::Stockfish;
+use chess::{Board, MoveGen};
 use std::fmt::{self, Debug, Display};
 use std::io::{self, BufRead, Stdin};
 use vampirc_uci::{parse_one, UciMessage};
@@ -30,18 +31,24 @@ macro_rules! recv_inner {
 pub struct Game {
     engine: Box<dyn Engine>,
     input: Stdin,
-    buffer: String,
+    input_buffer: String,
+    stockfish: Stockfish,
+    board: Board,
 }
 
 impl Game {
+    // Constructor
     pub fn new(config: &Configuration) -> Self {
         Game {
             engine: config.engine_kind.build(),
             input: io::stdin(),
-            buffer: String::new(),
+            input_buffer: String::new(),
+            stockfish: Stockfish::spawn(),
+            board: Board::default(),
         }
     }
 
+    // Communication
     pub fn recv_raw(&mut self) -> String {
         let mut buffer = String::new();
         recv_inner!(self, &mut buffer);
@@ -49,17 +56,29 @@ impl Game {
     }
 
     pub fn recv(&mut self) -> UciMessage {
-        self.buffer.clear();
-        recv_inner!(self, &mut self.buffer);
-        parse_one(&self.buffer)
+        self.input_buffer.clear();
+        recv_inner!(self, &mut self.input_buffer);
+        parse_one(&self.input_buffer)
     }
 
     pub fn send<D: Display>(&mut self, command: D) {
         println!("{}", command);
     }
 
-    pub fn process(&mut self, command: &UciMessage) {
-        todo!()
+    // Getters
+    #[inline]
+    pub fn stockfish(&mut self) -> &mut Stockfish {
+        &mut self.stockfish
+    }
+
+    #[inline]
+    pub fn board(&mut self) -> &mut Board {
+        &mut self.board
+    }
+
+    #[inline]
+    pub fn moves(&self) -> MoveGen {
+        MoveGen::new_legal(&self.board)
     }
 }
 
@@ -68,7 +87,9 @@ impl Debug for Game {
         f.debug_struct("Game")
             .field("engine", &self.engine.kind())
             .field("input", &self.input)
-            .field("buffer", &self.buffer)
+            .field("input_buffer", &self.input_buffer)
+            .field("stockfish", &self.stockfish)
+            .field("board", &self.board)
             .finish()
     }
 }
