@@ -14,6 +14,7 @@ mod passthrough;
 mod worstfish;
 
 use std::convert::TryFrom;
+use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 pub trait Engine {
@@ -24,6 +25,16 @@ pub trait Engine {
 pub enum EngineChoice {
     Stockfish,
     Worstfish,
+}
+
+impl EngineChoice {
+    pub fn print_variants() {
+        eprintln!("Possible values:");
+
+        for variant in EngineChoice::iter() {
+            eprintln!("- {:?}", variant);
+        }
+    }
 }
 
 impl<'a> TryFrom<&'a str> for EngineChoice {
