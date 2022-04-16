@@ -11,9 +11,20 @@
  */
 
 use super::prelude::*;
+use crate::stockfish::Stockfish;
 
 #[derive(Debug)]
-pub struct StockfishEngine;
+pub struct StockfishEngine {
+    stockfish: Stockfish,
+}
+
+impl StockfishEngine {
+    pub fn new() -> Self {
+        StockfishEngine {
+            stockfish: Stockfish::spawn(),
+        }
+    }
+}
 
 impl Engine for StockfishEngine {
     fn kind(&self) -> EngineKind {

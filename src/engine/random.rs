@@ -18,6 +18,13 @@ pub struct RandomEngine {
     board: Board,
 }
 
+impl RandomEngine {
+    #[inline]
+    pub fn new() -> Self {
+        RandomEngine::default()
+    }
+}
+
 impl Engine for RandomEngine {
     fn kind(&self) -> EngineKind {
         EngineKind::Random

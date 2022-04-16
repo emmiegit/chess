@@ -61,6 +61,10 @@ impl Game {
     pub fn write(&mut self, command: &UciMessage) {
         println!("{}", command);
     }
+
+    pub fn process(&mut self, command: &UciMessage) {
+        todo!()
+    }
 }
 
 impl Debug for Game {

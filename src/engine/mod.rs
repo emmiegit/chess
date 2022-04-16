@@ -59,9 +59,9 @@ impl EngineKind {
 
     pub fn build(self) -> Box<dyn Engine> {
         match self {
-            EngineKind::Random => Box::new(RandomEngine::default()),
-            EngineKind::Stockfish => Box::new(StockfishEngine),
-            EngineKind::Worstfish => Box::new(WorstfishEngine),
+            EngineKind::Random => Box::new(RandomEngine::new()),
+            EngineKind::Stockfish => Box::new(StockfishEngine::new()),
+            EngineKind::Worstfish => Box::new(WorstfishEngine::new()),
         }
     }
 }
