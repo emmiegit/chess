@@ -39,7 +39,6 @@ impl Communicator {
         let mut buffer = String::new();
         let mut guard = self.input.lock();
         guard.read_line(&mut buffer)?;
-        buffer.pop(); // Remove newline character
         Ok(buffer)
     }
 
@@ -54,4 +53,25 @@ impl Communicator {
         guard.flush()?;
         Ok(())
     }
+
+    pub fn read(&mut self) -> ReceivedCommand {
+        let command = self.read_raw().expect("Read error");
+        let parts = command.split_ascii_whitespace();
+    }
+
+    pub fn write(&mut self, command: &SentCommand) {
+        todo!()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum ReceivedCommand {
+    SynchronizeXboard,
+    SynchronizeProtocol(i32),
+    // TODO
+}
+
+#[derive(Debug, Clone)]
+pub enum SentCommand {
+    // TODO
 }
