@@ -18,7 +18,7 @@
 //!
 //! See description: https://home.hccnet.nl/h.g.muller/engine-intf.html
 
-use std::io::{self, Stdin, Stdout};
+use std::io::{self, BufRead, Result, Stdin, Stdout, Write};
 
 #[derive(Debug)]
 pub struct Communicator {
@@ -33,5 +33,25 @@ impl Communicator {
             input: io::stdin(),
             output: io::stdout(),
         }
+    }
+
+    fn read_raw(&mut self) -> Result<String> {
+        let mut buffer = String::new();
+        let mut guard = self.input.lock();
+        guard.read_line(&mut buffer)?;
+        buffer.pop(); // Remove newline character
+        Ok(buffer)
+    }
+
+    fn write_raw(&mut self, command: &str) -> Result<()> {
+        assert!(
+            command.ends_with('\n'),
+            "Raw command does not end with newline",
+        );
+
+        let mut guard = self.output.lock();
+        guard.write_all(command.as_bytes())?;
+        guard.flush()?;
+        Ok(())
     }
 }
