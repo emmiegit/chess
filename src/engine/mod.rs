@@ -15,9 +15,11 @@ mod prelude {
 }
 
 mod passthrough;
+mod random;
 mod worstfish;
 
 pub use self::passthrough::StockfishEngine;
+pub use self::random::RandomEngine;
 pub use self::worstfish::WorstfishEngine;
 
 use std::convert::TryFrom;
@@ -31,6 +33,7 @@ pub trait Engine {
 
 #[derive(EnumIter, Debug, Copy, Clone)]
 pub enum EngineChoice {
+    Random,
     Stockfish,
     Worstfish,
 }
@@ -49,7 +52,9 @@ impl<'a> TryFrom<&'a str> for EngineChoice {
     type Error = &'a str;
 
     fn try_from(name: &'a str) -> Result<EngineChoice, &'a str> {
-        const VALUES: [(&str, EngineChoice); 5] = [
+        const VALUES: [(&str, EngineChoice); 7] = [
+            ("rand", EngineChoice::Random),
+            ("random", EngineChoice::Random),
             ("boring", EngineChoice::Stockfish),
             ("dummy", EngineChoice::Stockfish),
             ("passthrough", EngineChoice::Stockfish),
