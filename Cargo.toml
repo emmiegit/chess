@@ -1,0 +1,16 @@
+[package]
+name = "mallard-chess"
+description = "Chess engine wrapper utility for fun"
+repository = "https://github.com/ammongit/chess"
+readme = "README.md"
+license = "MIT"
+keywords = ["chess", "engine", "stockfish"]
+categories = ["games", "command-line-interface"]
+exclude = [".gitignore", ".github"]
+
+version = "0.0.1"
+authors = ["Ammon Smith <ammon.i.smith@gmail.com>"]
+edition = "2021" # this is *not* the same as the current year
+rust-version = "1.60.0"
+
+[dependencies]
