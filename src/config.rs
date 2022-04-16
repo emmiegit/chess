@@ -10,14 +10,14 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-use crate::engine::EngineChoice;
+use crate::engine::EngineKind;
 use clap::{Arg, Command};
 use std::convert::TryFrom;
 use std::process;
 
 #[derive(Debug)]
 pub struct Configuration {
-    pub engine: EngineChoice,
+    pub engine_kind: EngineKind,
 }
 
 impl Configuration {
@@ -35,21 +35,21 @@ impl Configuration {
             )
             .get_matches();
 
-        let engine = {
+        let engine_kind = {
             let value = matches
                 .value_of("engine")
                 .expect("Missing required argument");
 
-            match EngineChoice::try_from(value) {
+            match EngineKind::try_from(value) {
                 Ok(game_mode) => game_mode,
                 Err(_) => {
                     eprintln!("Unknown game engine: {}", value);
-                    EngineChoice::print_variants();
+                    EngineKind::print_variants();
                     process::exit(1);
                 }
             }
         };
 
-        Configuration { engine }
+        Configuration { engine_kind }
     }
 }

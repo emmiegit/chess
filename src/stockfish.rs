@@ -16,7 +16,17 @@
 //! using for our various "modes" of chess engine operation.
 //!
 //! This application is essentially "piping through" what
-//! Stockfish determines, with modifications set via
-//! command-line settings.
+//! Stockfish determines, with modifications depending on the mode.
+
+use vampirc_uci;
+
+#[derive(Debug)]
+pub struct Stockfish {}
+
+impl Stockfish {
+    pub fn spawn() -> Self {
+        Stockfish {}
+    }
+}
 
 // TODO

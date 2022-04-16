@@ -16,6 +16,10 @@ use super::prelude::*;
 pub struct StockfishEngine;
 
 impl Engine for StockfishEngine {
+    fn kind(&self) -> EngineKind {
+        EngineKind::Stockfish
+    }
+
     fn name(&self) -> &'static str {
         "Stockfish (pass-through)"
     }

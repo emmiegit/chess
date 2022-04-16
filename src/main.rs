@@ -12,16 +12,15 @@
 
 mod config;
 mod engine;
-mod protocol;
+mod game;
 mod stockfish;
 
 use self::config::Configuration;
-use self::protocol::Communicator;
+use self::game::Game;
 
 fn main() {
     let config = Configuration::load();
-    let _comm = Communicator::new();
-    let _engine = config.engine.build();
+    let mut game = Game::new(&config);
 
     todo!();
 }

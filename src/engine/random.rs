@@ -16,6 +16,10 @@ use super::prelude::*;
 pub struct RandomEngine;
 
 impl Engine for RandomEngine {
+    fn kind(&self) -> EngineKind {
+        EngineKind::Random
+    }
+
     fn name(&self) -> &'static str {
         "Random"
     }

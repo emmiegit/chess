@@ -7,7 +7,7 @@
   </a>
 </p>
 
-Chess engine wrapper utility created for fun. Intended for use with xboard; utilizes the [Chess Engine Communication Protocol](https://home.hccnet.nl/h.g.muller/engine-intf.html).
+Chess engine wrapper utility created for fun. Intended for use with xboard; utilizes the [Universal Chess Interface](https://en.wikipedia.org/wiki/Universal_Chess_Interface).
 
 ## Requirements
 

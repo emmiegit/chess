@@ -11,7 +11,7 @@
  */
 
 mod prelude {
-    pub use super::Engine;
+    pub use super::{Engine, EngineKind};
 }
 
 mod passthrough;
@@ -27,47 +27,48 @@ use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 pub trait Engine {
+    fn kind(&self) -> EngineKind;
     fn name(&self) -> &'static str;
     fn description(&self) -> &'static str;
 }
 
 #[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
-pub enum EngineChoice {
+pub enum EngineKind {
     Random,
     Stockfish,
     Worstfish,
 }
 
-impl EngineChoice {
+impl EngineKind {
     pub fn print_variants() {
         eprintln!("Possible values:");
 
-        for variant in EngineChoice::iter() {
+        for variant in EngineKind::iter() {
             eprintln!("- {:?}", variant);
         }
     }
 
     pub fn build(self) -> Box<dyn Engine> {
         match self {
-            EngineChoice::Random => Box::new(RandomEngine),
-            EngineChoice::Stockfish => Box::new(StockfishEngine),
-            EngineChoice::Worstfish => Box::new(WorstfishEngine),
+            EngineKind::Random => Box::new(RandomEngine),
+            EngineKind::Stockfish => Box::new(StockfishEngine),
+            EngineKind::Worstfish => Box::new(WorstfishEngine),
         }
     }
 }
 
-impl<'a> TryFrom<&'a str> for EngineChoice {
+impl<'a> TryFrom<&'a str> for EngineKind {
     type Error = &'a str;
 
-    fn try_from(name: &'a str) -> Result<EngineChoice, &'a str> {
-        const VALUES: [(&str, EngineChoice); 7] = [
-            ("rand", EngineChoice::Random),
-            ("random", EngineChoice::Random),
-            ("boring", EngineChoice::Stockfish),
-            ("dummy", EngineChoice::Stockfish),
-            ("passthrough", EngineChoice::Stockfish),
-            ("stockfish", EngineChoice::Stockfish),
-            ("worstfish", EngineChoice::Worstfish),
+    fn try_from(name: &'a str) -> Result<EngineKind, &'a str> {
+        const VALUES: [(&str, EngineKind); 7] = [
+            ("rand", EngineKind::Random),
+            ("random", EngineKind::Random),
+            ("boring", EngineKind::Stockfish),
+            ("dummy", EngineKind::Stockfish),
+            ("passthrough", EngineKind::Stockfish),
+            ("stockfish", EngineKind::Stockfish),
+            ("worstfish", EngineKind::Worstfish),
         ];
 
         for (value, mode) in VALUES {

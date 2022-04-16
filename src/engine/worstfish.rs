@@ -16,6 +16,10 @@ use super::prelude::*;
 pub struct WorstfishEngine;
 
 impl Engine for WorstfishEngine {
+    fn kind(&self) -> EngineKind {
+        EngineKind::Worstfish
+    }
+
     fn name(&self) -> &'static str {
         "Worstfish"
     }
