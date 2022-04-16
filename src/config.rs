@@ -29,12 +29,6 @@ impl Configuration {
             .version(env!("CARGO_PKG_VERSION"))
             .about(env!("CARGO_PKG_DESCRIPTION"))
             .arg(
-                Arg::new("print-engines")
-                    .short('l')
-                    .long("print-engines")
-                    .help("Print the valid game engine values and quit"),
-            )
-            .arg(
                 Arg::new("log-output")
                     .short('o')
                     .long("output")
@@ -51,11 +45,6 @@ impl Configuration {
                     .help("What internal engine to play using"),
             )
             .get_matches();
-
-        if matches.is_present("print-engines") {
-            EngineChoice::print_variants();
-            process::exit(0);
-        }
 
         let engine = {
             let value = matches
