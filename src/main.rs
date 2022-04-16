@@ -11,6 +11,7 @@
  */
 
 mod config;
+mod mode;
 mod protocol;
 mod stockfish;
 

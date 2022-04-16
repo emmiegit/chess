@@ -10,6 +10,7 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
+use crate::mode::GameMode;
 use clap::{Arg, Command};
 use std::convert::TryFrom;
 use std::fs::File;
@@ -74,31 +75,5 @@ impl Configuration {
             game_mode,
             log_file,
         }
-    }
-}
-
-#[derive(Debug, Copy, Clone)]
-pub enum GameMode {
-    Stockfish,
-    Worstfish,
-}
-
-impl<'a> TryFrom<&'a str> for GameMode {
-    type Error = &'a str;
-
-    fn try_from(name: &'a str) -> Result<GameMode, &'a str> {
-        const VALUES: [(&str, GameMode); 3] = [
-            ("boring", GameMode::Stockfish),
-            ("stockfish", GameMode::Stockfish),
-            ("worstfish", GameMode::Worstfish),
-        ];
-
-        for (value, mode) in VALUES {
-            if name.eq_ignore_ascii_case(value) {
-                return Ok(mode);
-            }
-        }
-
-        Err(name)
     }
 }
