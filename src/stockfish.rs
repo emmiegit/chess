@@ -1,5 +1,5 @@
 /*
- * main.rs
+ * stockfish.rs
  *
  * mallard-chess - Chess engine wrapper utility for fun
  * Copyright (C) 2022 Ammon Smith
@@ -10,9 +10,13 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-mod protocol;
-mod stockfish;
+//! Module for communicating with Stockfish.
+//!
+//! Stockfish is a very solid chess engine which we are
+//! using for our various "modes" of chess engine operation.
+//!
+//! This application is essentially "piping through" what
+//! Stockfish determines, with modifications set via
+//! command-line settings.
 
-fn main() {
-    todo!();
-}
+// TODO

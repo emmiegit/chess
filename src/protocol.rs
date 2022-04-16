@@ -1,5 +1,5 @@
 /*
- * main.rs
+ * protocol.rs
  *
  * mallard-chess - Chess engine wrapper utility for fun
  * Copyright (C) 2022 Ammon Smith
@@ -10,9 +10,9 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-mod protocol;
-mod stockfish;
+//! Module for communicating using the Chess Engine Communication Protocol.
+//! Needed for talking to xboard and other such programs.
+//!
+//! See description: https://home.hccnet.nl/h.g.muller/engine-intf.html
 
-fn main() {
-    todo!();
-}
+// TODO
