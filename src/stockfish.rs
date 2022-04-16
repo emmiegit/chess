@@ -18,12 +18,23 @@
 //! This application is essentially "piping through" what
 //! Stockfish determines, with modifications depending on the mode.
 
+use std::process::{Child, Command, Stdio};
+
 #[derive(Debug)]
-pub struct Stockfish {}
+pub struct Stockfish {
+    process: Child,
+}
 
 impl Stockfish {
     pub fn spawn() -> Self {
-        Stockfish {}
+        let mut process = Command::new("stockfish")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::null())
+            .spawn()
+            .expect("Unable to start stockfish");
+
+        Stockfish { process }
     }
 }
 
