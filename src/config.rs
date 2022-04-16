@@ -13,13 +13,11 @@
 use crate::engine::EngineChoice;
 use clap::{Arg, Command};
 use std::convert::TryFrom;
-use std::fs::File;
 use std::process;
 
 #[derive(Debug)]
 pub struct Configuration {
     pub engine: EngineChoice,
-    pub log_file: Option<File>,
 }
 
 impl Configuration {
@@ -28,15 +26,6 @@ impl Configuration {
             .author(env!("CARGO_PKG_AUTHORS"))
             .version(env!("CARGO_PKG_VERSION"))
             .about(env!("CARGO_PKG_DESCRIPTION"))
-            .arg(
-                Arg::new("log-output")
-                    .short('o')
-                    .long("output")
-                    .long("log-output")
-                    .takes_value(true)
-                    .value_name("PATH")
-                    .help("Path to optionally share program logging during execution"),
-            )
             .arg(
                 Arg::new("engine")
                     .required(true)
@@ -61,16 +50,6 @@ impl Configuration {
             }
         };
 
-        let log_file = matches
-            .value_of_os("log-output")
-            .map(|path| match File::open(path) {
-                Ok(file) => file,
-                Err(error) => {
-                    eprintln!("Unable to open log output path: {}", error);
-                    process::exit(1);
-                }
-            });
-
-        Configuration { engine, log_file }
+        Configuration { engine }
     }
 }
