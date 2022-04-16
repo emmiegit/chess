@@ -13,6 +13,9 @@
 //! Module for communicating using the Chess Engine Communication Protocol.
 //! Needed for talking to xboard and other such programs.
 //!
+//! It uses stdin for receiving data and stdout for sending data, so all
+//! "logging" throughout this application uses stderr.
+//!
 //! See description: https://home.hccnet.nl/h.g.muller/engine-intf.html
 
 // TODO
