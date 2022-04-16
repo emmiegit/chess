@@ -34,14 +34,14 @@ impl Configuration {
                     .long("output")
                     .long("log-output")
                     .takes_value(true)
-                    .value_name("path")
+                    .value_name("PATH")
                     .help("Path to optionally share program logging during execution."),
             )
             .arg(
                 Arg::new("engine")
                     .required(true)
                     .takes_value(true)
-                    .value_name("name")
+                    .value_name("NAME")
                     .help("What internal engine to play using."),
             )
             .get_matches();
