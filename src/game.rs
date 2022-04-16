@@ -13,7 +13,7 @@
 use crate::config::Configuration;
 use crate::engine::Engine;
 use crate::stockfish::Stockfish;
-use std::fmt::{self, Debug};
+use std::fmt::{self, Debug, Display};
 use std::io::{self, BufRead, Stdin};
 use vampirc_uci::{parse_one, UciMessage};
 
@@ -48,17 +48,13 @@ impl Game {
         buffer
     }
 
-    pub fn send_raw(&mut self, command: &str) {
-        println!("{}", command);
-    }
-
     pub fn recv(&mut self) -> UciMessage {
         self.buffer.clear();
         recv_inner!(self, &mut self.buffer);
         parse_one(&self.buffer)
     }
 
-    pub fn send(&mut self, command: &UciMessage) {
+    pub fn send<D: Display>(&mut self, command: D) {
         println!("{}", command);
     }
 

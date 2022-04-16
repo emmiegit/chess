@@ -18,6 +18,7 @@
 //! This application is essentially "piping through" what
 //! Stockfish determines, with modifications depending on the mode.
 
+use std::fmt::Display;
 use std::io::{BufRead, BufReader, Write};
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 use vampirc_uci::{parse_one, UciMessage};
@@ -65,23 +66,19 @@ impl Stockfish {
         buffer
     }
 
-    pub fn send_raw(&mut self, command: &str) {
-        write!(self.output, "{}\n", command).expect("Unable to write to stockfish");
-        self.output.flush().expect("Unable to flush stockfish pipe");
-    }
-
     pub fn recv(&mut self) -> UciMessage {
         self.buffer.clear();
         recv_inner!(self, &mut self.buffer);
         parse_one(&self.buffer)
     }
 
-    pub fn send(&mut self, command: &UciMessage) {
-        self.send_raw(&command.to_string());
+    pub fn send<D: Display>(&mut self, command: D) {
+        writeln!(self.output, "{}", command).expect("Unable to write to stockfish");
+        self.output.flush().expect("Unable to flush stockfish pipe");
     }
 
     #[inline]
     pub fn reset(&mut self) {
-        self.send(&UciMessage::UciNewGame);
+        self.send(UciMessage::UciNewGame);
     }
 }
