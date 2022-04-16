@@ -18,8 +18,8 @@ use std::process;
 
 #[derive(Debug)]
 pub struct Configuration {
-    engine: EngineChoice,
-    log_file: Option<File>,
+    pub engine: EngineChoice,
+    pub log_file: Option<File>,
 }
 
 impl Configuration {

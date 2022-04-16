@@ -19,6 +19,7 @@ use self::config::Configuration;
 
 fn main() {
     let config = Configuration::load();
+    let engine = config.engine.build();
 
     todo!();
 }

@@ -31,7 +31,7 @@ pub trait Engine {
     fn description(&self) -> &'static str;
 }
 
-#[derive(EnumIter, Debug, Copy, Clone)]
+#[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
 pub enum EngineChoice {
     Random,
     Stockfish,
@@ -44,6 +44,14 @@ impl EngineChoice {
 
         for variant in EngineChoice::iter() {
             eprintln!("- {:?}", variant);
+        }
+    }
+
+    pub fn build(self) -> Box<dyn Engine> {
+        match self {
+            EngineChoice::Random => Box::new(RandomEngine),
+            EngineChoice::Stockfish => Box::new(StockfishEngine),
+            EngineChoice::Worstfish => Box::new(WorstfishEngine),
         }
     }
 }
