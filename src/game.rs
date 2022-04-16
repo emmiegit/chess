@@ -31,10 +31,6 @@ impl Game {
         }
     }
 
-    pub fn main_loop(&mut self) {
-        todo!()
-    }
-
     fn read_raw(&mut self) -> String {
         let mut buffer = String::new();
         self.input
