@@ -11,7 +11,7 @@
  */
 
 use crate::config::Configuration;
-use crate::engine::{Engine, EngineKind};
+use crate::engine::Engine;
 use crate::stockfish::Stockfish;
 use std::fmt::{self, Debug};
 use std::io::{self, BufRead, Stdin};
