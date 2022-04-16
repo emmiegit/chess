@@ -10,7 +10,7 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-use crate::mode::GameMode;
+use crate::engine::EngineChoice;
 use clap::{Arg, Command};
 use std::convert::TryFrom;
 use std::fs::File;
@@ -18,7 +18,7 @@ use std::process;
 
 #[derive(Debug)]
 pub struct Configuration {
-    game_mode: GameMode,
+    engine: EngineChoice,
     log_file: Option<File>,
 }
 
@@ -29,16 +29,6 @@ impl Configuration {
             .version(env!("CARGO_PKG_VERSION"))
             .about(env!("CARGO_PKG_DESCRIPTION"))
             .arg(
-                Arg::new("mode")
-                    .short('m')
-                    .long("mode")
-                    .long("gamemode")
-                    .required(true)
-                    .takes_value(true)
-                    .value_name("name")
-                    .help("What game mode to play as."),
-            )
-            .arg(
                 Arg::new("log-output")
                     .short('o')
                     .long("output")
@@ -47,15 +37,24 @@ impl Configuration {
                     .value_name("path")
                     .help("Path to optionally share program logging during execution."),
             )
+            .arg(
+                Arg::new("engine")
+                    .required(true)
+                    .takes_value(true)
+                    .value_name("name")
+                    .help("What internal engine to play using."),
+            )
             .get_matches();
 
-        let game_mode = {
-            let value = matches.value_of("mode").expect("Missing required argument");
+        let engine = {
+            let value = matches
+                .value_of("engine")
+                .expect("Missing required argument");
 
-            match GameMode::try_from(value) {
+            match EngineChoice::try_from(value) {
                 Ok(game_mode) => game_mode,
                 Err(_) => {
-                    eprintln!("Unknown game mode: {}", value);
+                    eprintln!("Unknown game engine: {}", value);
                     process::exit(1);
                 }
             }
@@ -71,9 +70,6 @@ impl Configuration {
                 }
             });
 
-        Configuration {
-            game_mode,
-            log_file,
-        }
+        Configuration { engine, log_file }
     }
 }

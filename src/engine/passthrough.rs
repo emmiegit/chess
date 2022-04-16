@@ -1,5 +1,5 @@
 /*
- * main.rs
+ * engine/passthrough.rs
  *
  * mallard-chess - Chess engine wrapper utility for fun
  * Copyright (C) 2022 Ammon Smith
@@ -10,15 +10,4 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-mod config;
-mod engine;
-mod protocol;
-mod stockfish;
-
-use self::config::Configuration;
-
-fn main() {
-    let config = Configuration::load();
-
-    todo!();
-}
+// TODO

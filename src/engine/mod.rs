@@ -1,5 +1,5 @@
 /*
- * mode/mod.rs
+ * engine/mod.rs
  *
  * mallard-chess - Chess engine wrapper utility for fun
  * Copyright (C) 2022 Ammon Smith
@@ -10,22 +10,31 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
+mod passthrough;
+mod worstfish;
+
 use std::convert::TryFrom;
 
+pub trait Engine {
+    // TODO
+}
+
 #[derive(Debug, Copy, Clone)]
-pub enum GameMode {
+pub enum EngineChoice {
     Stockfish,
     Worstfish,
 }
 
-impl<'a> TryFrom<&'a str> for GameMode {
+impl<'a> TryFrom<&'a str> for EngineChoice {
     type Error = &'a str;
 
-    fn try_from(name: &'a str) -> Result<GameMode, &'a str> {
-        const VALUES: [(&str, GameMode); 3] = [
-            ("boring", GameMode::Stockfish),
-            ("stockfish", GameMode::Stockfish),
-            ("worstfish", GameMode::Worstfish),
+    fn try_from(name: &'a str) -> Result<EngineChoice, &'a str> {
+        const VALUES: [(&str, EngineChoice); 5] = [
+            ("boring", EngineChoice::Stockfish),
+            ("dummy", EngineChoice::Stockfish),
+            ("passthrough", EngineChoice::Stockfish),
+            ("stockfish", EngineChoice::Stockfish),
+            ("worstfish", EngineChoice::Worstfish),
         ];
 
         for (value, mode) in VALUES {
