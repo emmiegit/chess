@@ -10,4 +10,17 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-// TODO
+use super::prelude::*;
+
+#[derive(Debug)]
+pub struct WorstfishEngine;
+
+impl Engine for WorstfishEngine {
+    fn name(&self) -> &'static str {
+        "Worstfish"
+    }
+
+    fn description(&self) -> &'static str {
+        "Chooses the moves Stockfish dislikes the most."
+    }
+}

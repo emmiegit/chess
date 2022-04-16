@@ -10,4 +10,17 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-// TODO
+use super::prelude::*;
+
+#[derive(Debug)]
+pub struct StockfishEngine;
+
+impl Engine for StockfishEngine {
+    fn name(&self) -> &'static str {
+        "Stockfish (pass-through)"
+    }
+
+    fn description(&self) -> &'static str {
+        "Dummy pass-through engine. Simply pipes Stockfish's assessment as-is."
+    }
+}

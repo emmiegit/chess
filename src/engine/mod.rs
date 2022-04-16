@@ -10,15 +10,23 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
+mod prelude {
+    pub use super::Engine;
+}
+
 mod passthrough;
 mod worstfish;
+
+pub use self::passthrough::StockfishEngine;
+pub use self::worstfish::WorstfishEngine;
 
 use std::convert::TryFrom;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 pub trait Engine {
-    // TODO
+    fn name(&self) -> &'static str;
+    fn description(&self) -> &'static str;
 }
 
 #[derive(EnumIter, Debug, Copy, Clone)]
