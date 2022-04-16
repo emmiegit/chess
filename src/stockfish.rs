@@ -79,4 +79,9 @@ impl Stockfish {
     pub fn send(&mut self, command: &UciMessage) {
         self.send_raw(&command.to_string());
     }
+
+    #[inline]
+    pub fn reset(&mut self) {
+        self.send(&UciMessage::UciNewGame);
+    }
 }

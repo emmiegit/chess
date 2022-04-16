@@ -40,6 +40,6 @@ impl Engine for WorstfishEngine {
     }
 
     fn reset(&mut self) {
-        todo!()
+        self.stockfish.reset();
     }
 }
