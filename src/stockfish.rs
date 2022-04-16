@@ -22,7 +22,7 @@ use std::io::{BufRead, BufReader, Write};
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 use vampirc_uci::{parse_one, UciMessage};
 
-macro_rules! read_inner {
+macro_rules! recv_inner {
     ($self:expr, $buffer:expr $(,)?) => {
         $self
             .input
@@ -59,26 +59,24 @@ impl Stockfish {
         }
     }
 
-    pub fn read_raw(&mut self) -> String {
+    pub fn recv_raw(&mut self) -> String {
         let mut buffer = String::new();
-        read_inner!(self, &mut buffer);
+        recv_inner!(self, &mut buffer);
         buffer
     }
 
-    pub fn write_raw(&mut self, command: &str) {
+    pub fn send_raw(&mut self, command: &str) {
         write!(self.output, "{}\n", command).expect("Unable to write to stockfish");
         self.output.flush().expect("Unable to flush stockfish pipe");
     }
 
-    pub fn read(&mut self) -> UciMessage {
+    pub fn recv(&mut self) -> UciMessage {
         self.buffer.clear();
-        read_inner!(self, &mut self.buffer);
+        recv_inner!(self, &mut self.buffer);
         parse_one(&self.buffer)
     }
 
-    pub fn write(&mut self, command: &UciMessage) {
-        self.write_raw(&command.to_string());
+    pub fn send(&mut self, command: &UciMessage) {
+        self.send_raw(&command.to_string());
     }
 }
-
-// TODO
