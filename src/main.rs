@@ -16,9 +16,11 @@ mod protocol;
 mod stockfish;
 
 use self::config::Configuration;
+use self::protocol::Communicator;
 
 fn main() {
     let config = Configuration::load();
+    let _comm = Communicator::new();
     let _engine = config.engine.build();
 
     todo!();

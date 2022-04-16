@@ -18,4 +18,20 @@
 //!
 //! See description: https://home.hccnet.nl/h.g.muller/engine-intf.html
 
-// TODO
+use std::io::{self, Stdin, Stdout};
+
+#[derive(Debug)]
+pub struct Communicator {
+    input: Stdin,
+    output: Stdout,
+}
+
+impl Communicator {
+    #[inline]
+    pub fn new() -> Self {
+        Communicator {
+            input: io::stdin(),
+            output: io::stdout(),
+        }
+    }
+}
