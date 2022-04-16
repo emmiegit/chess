@@ -15,6 +15,7 @@ use clap::{Arg, Command};
 use std::convert::TryFrom;
 use std::fs::File;
 use std::process;
+use strum::IntoEnumIterator;
 
 #[derive(Debug)]
 pub struct Configuration {
@@ -55,6 +56,12 @@ impl Configuration {
                 Ok(game_mode) => game_mode,
                 Err(_) => {
                     eprintln!("Unknown game engine: {}", value);
+                    eprintln!("Possible values:");
+
+                    for variant in EngineChoice::iter() {
+                        eprintln!("- {:?}", variant);
+                    }
+
                     process::exit(1);
                 }
             }

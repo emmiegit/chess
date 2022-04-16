@@ -14,12 +14,13 @@ mod passthrough;
 mod worstfish;
 
 use std::convert::TryFrom;
+use strum_macros::EnumIter;
 
 pub trait Engine {
     // TODO
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(EnumIter, Debug, Copy, Clone)]
 pub enum EngineChoice {
     Stockfish,
     Worstfish,
