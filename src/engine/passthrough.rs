@@ -27,4 +27,8 @@ impl Engine for StockfishEngine {
     fn description(&self) -> &'static str {
         "Dummy pass-through engine. Simply pipes Stockfish's moves as-is."
     }
+
+    fn reset(&mut self) {
+        todo!()
+    }
 }

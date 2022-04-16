@@ -18,8 +18,6 @@
 //! This application is essentially "piping through" what
 //! Stockfish determines, with modifications depending on the mode.
 
-use vampirc_uci;
-
 #[derive(Debug)]
 pub struct Stockfish {}
 

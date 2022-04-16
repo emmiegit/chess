@@ -11,9 +11,12 @@
  */
 
 use super::prelude::*;
+use chess::{Board, MoveGen};
 
-#[derive(Debug)]
-pub struct RandomEngine;
+#[derive(Debug, Default)]
+pub struct RandomEngine {
+    board: Board,
+}
 
 impl Engine for RandomEngine {
     fn kind(&self) -> EngineKind {
@@ -26,5 +29,9 @@ impl Engine for RandomEngine {
 
     fn description(&self) -> &'static str {
         "Chooses a random valid move"
+    }
+
+    fn reset(&mut self) {
+        self.board = Board::default();
     }
 }

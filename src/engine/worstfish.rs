@@ -27,4 +27,8 @@ impl Engine for WorstfishEngine {
     fn description(&self) -> &'static str {
         "Chooses the moves Stockfish dislikes the most."
     }
+
+    fn reset(&mut self) {
+        todo!()
+    }
 }

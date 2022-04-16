@@ -27,9 +27,18 @@ use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 pub trait Engine {
+    /// Returns the `EngineKind` associated with the engine.
     fn kind(&self) -> EngineKind;
+
+    /// Returns a constant string describing the name of the engine.
     fn name(&self) -> &'static str;
+
+    /// Returns a short constant string describing the behavior of the engine.
     fn description(&self) -> &'static str;
+
+    /// Resets the engine, preparing for a new game.
+    /// The state should be identical to constructing a new instance of the engine.
+    fn reset(&mut self);
 }
 
 #[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
@@ -50,7 +59,7 @@ impl EngineKind {
 
     pub fn build(self) -> Box<dyn Engine> {
         match self {
-            EngineKind::Random => Box::new(RandomEngine),
+            EngineKind::Random => Box::new(RandomEngine::default()),
             EngineKind::Stockfish => Box::new(StockfishEngine),
             EngineKind::Worstfish => Box::new(WorstfishEngine),
         }

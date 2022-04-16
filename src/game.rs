@@ -15,33 +15,50 @@ use crate::engine::Engine;
 use crate::stockfish::Stockfish;
 use std::fmt::{self, Debug};
 use std::io::{self, BufRead, Stdin};
+use vampirc_uci::{parse_one, UciMessage};
+
+macro_rules! read_inner {
+    ($self:expr, $buffer:expr $(,)?) => {
+        $self
+            .input
+            .lock()
+            .read_line($buffer)
+            .expect("Unable to read from stdin")
+    };
+}
 
 pub struct Game {
     engine: Box<dyn Engine>,
-    stockfish: Stockfish,
     input: Stdin,
+    buffer: String,
 }
 
 impl Game {
     pub fn new(config: &Configuration) -> Self {
         Game {
             engine: config.engine_kind.build(),
-            stockfish: Stockfish::spawn(),
             input: io::stdin(),
+            buffer: String::new(),
         }
     }
 
-    fn read_raw(&mut self) -> String {
+    pub fn read_raw(&mut self) -> String {
         let mut buffer = String::new();
-        self.input
-            .lock()
-            .read_line(&mut buffer)
-            .expect("Unable to read from stdin");
-
+        read_inner!(self, &mut buffer);
         buffer
     }
 
-    fn write_raw(&mut self, command: &str) {
+    pub fn write_raw(&mut self, command: &str) {
+        println!("{}", command);
+    }
+
+    pub fn read(&mut self) -> UciMessage {
+        self.buffer.clear();
+        read_inner!(self, &mut self.buffer);
+        parse_one(&self.buffer)
+    }
+
+    pub fn write(&mut self, command: &UciMessage) {
         println!("{}", command);
     }
 }
@@ -50,8 +67,8 @@ impl Debug for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("Game")
             .field("engine", &self.engine.kind())
-            .field("stockfish", &self.stockfish)
             .field("input", &self.input)
+            .field("buffer", &self.buffer)
             .finish()
     }
 }
