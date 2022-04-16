@@ -7,7 +7,15 @@
   </a>
 </p>
 
-Chess engine wrapper utility created for fun. Requires [stockfish](https://stockfishchess.org/) to be installed and available in your `$PATH`.
+Chess engine wrapper utility created for fun.
+
+## Requirements
+
+Because the engine uses [stockfish](https://stockfishchess.org/) for actual game engine decisioning, it must be installed and available in your `$PATH`.
+
+This code should be portable, but I do not use Windows and am not confident it will work flawlessly.
+
+## Execution
 
 ```
 cargo run --release -- [options]
