@@ -29,22 +29,33 @@ impl Configuration {
             .version(env!("CARGO_PKG_VERSION"))
             .about(env!("CARGO_PKG_DESCRIPTION"))
             .arg(
+                Arg::new("print-engines")
+                    .short('l')
+                    .long("print-engines")
+                    .help("Print the valid game engine values and quit"),
+            )
+            .arg(
                 Arg::new("log-output")
                     .short('o')
                     .long("output")
                     .long("log-output")
                     .takes_value(true)
                     .value_name("PATH")
-                    .help("Path to optionally share program logging during execution."),
+                    .help("Path to optionally share program logging during execution"),
             )
             .arg(
                 Arg::new("engine")
                     .required(true)
                     .takes_value(true)
                     .value_name("NAME")
-                    .help("What internal engine to play using."),
+                    .help("What internal engine to play using"),
             )
             .get_matches();
+
+        if matches.is_present("print-engines") {
+            EngineChoice::print_variants();
+            process::exit(0);
+        }
 
         let engine = {
             let value = matches
