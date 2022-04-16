@@ -14,3 +14,4 @@ edition = "2021" # this is *not* the same as the current year
 rust-version = "1.60.0"
 
 [dependencies]
+clap = "3"

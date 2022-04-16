@@ -10,9 +10,14 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
+mod config;
 mod protocol;
 mod stockfish;
 
+use self::config::Configuration;
+
 fn main() {
+    let config = Configuration::load();
+
     todo!();
 }
