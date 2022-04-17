@@ -69,13 +69,26 @@ impl Game {
         loop {
             match self.receive() {
                 // Set game state
-                UciMessage::UciNewGame => self.reset(),
+                UciMessage::UciNewGame => {
+                    log!(self.log_file, "Resetting game state");
+                    self.reset();
+                }
 
                 UciMessage::Position {
                     startpos,
                     fen,
                     moves,
                 } => {
+                    log!(
+                        self.log_file,
+                        "Setting board position ({}, moves {})",
+                        match fen {
+                            Some(ref fen) => &fen.0,
+                            None => "start",
+                        },
+                        moves.len(),
+                    );
+
                     match (startpos, fen) {
                         (true, None) => self.board = Board::default(),
                         (false, Some(fen)) => {
@@ -90,10 +103,14 @@ impl Game {
                 }
 
                 // Request move decision from engine
-                UciMessage::Go { .. } => self.decide_move(engine),
+                UciMessage::Go { .. } => {
+                    log!(self.log_file, "Engine decision has been requested");
+                    self.decide_move(engine);
+                }
 
                 // Status messages
                 UciMessage::Uci => {
+                    log!(self.log_file, "Received UCI startup message");
                     self.send(UciMessage::UciOk);
                     self.send(UciMessage::Id {
                         name: Some(format!("{} ({:?})", env!("CARGO_PKG_NAME"), engine.kind())),
@@ -105,10 +122,16 @@ impl Game {
                     });
                 }
 
-                UciMessage::ReadyOk => self.send(UciMessage::IsReady),
+                UciMessage::ReadyOk => {
+                    log!(self.log_file, "Engine readiness requested");
+                    self.send(UciMessage::IsReady);
+                }
 
                 // Terminal messages
-                UciMessage::Quit => break,
+                UciMessage::Quit => {
+                    log!(self.log_file, "Received quit request, breaking main loop");
+                    break;
+                }
 
                 // Ignore unknown or unexpected messages
                 _ => (),
