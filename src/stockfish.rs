@@ -108,7 +108,7 @@ impl Stockfish {
             match self.receive() {
                 // Finished evaluating
                 UciMessage::BestMove { best_move, .. } => {
-                    chess_move = best_move.into();
+                    chess_move = best_move;
                     break;
                 }
 

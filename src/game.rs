@@ -92,7 +92,7 @@ impl Game {
                     }
 
                     for m in moves {
-                        self.board = self.board.make_move_new(m.into());
+                        self.board = self.board.make_move_new(m);
                     }
                 }
 
@@ -116,7 +116,7 @@ impl Game {
         let chosen_move = engine.choose_move(self);
         self.board = self.board.make_move_new(chosen_move);
         self.send(UciMessage::BestMove {
-            best_move: chosen_move.into(),
+            best_move: chosen_move,
             ponder: None,
         });
     }
