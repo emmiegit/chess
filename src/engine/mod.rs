@@ -80,9 +80,12 @@ impl<'a> TryFrom<&'a str> for EngineKind {
     type Error = &'a str;
 
     fn try_from(name: &'a str) -> Result<EngineKind, &'a str> {
-        const VALUES: [(&str, EngineKind); 10] = [
+        const VALUES: [(&str, EngineKind); 13] = [
             ("rand", EngineKind::Random),
             ("random", EngineKind::Random),
+            ("pacifist", EngineKind::Pacifist),
+            ("pacifism", EngineKind::Pacifist),
+            ("hippie", EngineKind::Pacifist),
             ("boring", EngineKind::Stockfish),
             ("dummy", EngineKind::Stockfish),
             ("passthrough", EngineKind::Stockfish),
