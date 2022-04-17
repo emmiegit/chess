@@ -116,7 +116,7 @@ impl Game {
                     log!(self.log_file, "Received UCI startup message");
                     self.send(UciMessage::UciOk);
                     self.send(UciMessage::Id {
-                        name: Some(format!("{} ({:?})", env!("CARGO_PKG_NAME"), engine.kind())),
+                        name: Some(format!("{:?} ({})", engine.kind(), env!("CARGO_PKG_NAME"))),
                         author: None,
                     });
                     self.send(UciMessage::Id {
