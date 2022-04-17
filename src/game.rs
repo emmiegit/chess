@@ -76,6 +76,7 @@ impl Game {
 
     pub fn process(&mut self, engine: &dyn Engine) {
         match self.receive() {
+            // Set board position
             UciMessage::Position {
                 startpos,
                 fen,
@@ -93,6 +94,9 @@ impl Game {
                     self.board = self.board.make_move_new(m.into());
                 }
             }
+
+            // Request move decision from engine
+            UciMessage::Go { .. } => self.decide_move(engine),
 
             // Terminal messages
             UciMessage::Quit => process::exit(0),
