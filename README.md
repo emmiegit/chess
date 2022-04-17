@@ -7,6 +7,12 @@
 
 Chess engine wrapper created for fun. Intended for use with xboard; utilizes the [Universal Chess Interface](https://en.wikipedia.org/wiki/Universal_Chess_Interface).
 
+To use it in xboard, add engine lines similar to the following:
+```
+"Pacifist" -fcp "mallard-chess pacifist" -fUCI
+"Worstfish" -fcp "mallard-chess -N 10000 worstfish" -fUCI
+```
+
 ## Requirements
 
 Because the engine uses [stockfish](https://stockfishchess.org/) for actual game engine decisioning, it must be installed and available in your `$PATH`.
