@@ -21,7 +21,9 @@ use self::game::Game;
 
 fn main() {
     let config = Configuration::load();
+    let engine = config.engine_kind.build();
     let mut game = Game::new(&config);
+
     game.setup();
 
     todo!();
