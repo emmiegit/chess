@@ -18,6 +18,7 @@ use std::process;
 #[derive(Debug)]
 pub struct Configuration {
     pub engine_kind: EngineKind,
+    pub stockfish_nodes: Option<u64>,
 }
 
 impl Configuration {
@@ -27,6 +28,15 @@ impl Configuration {
             .version(env!("CARGO_PKG_VERSION"))
             .about(env!("CARGO_PKG_DESCRIPTION"))
             .arg(
+                Arg::new("stockfish-nodes")
+                    .short('N')
+                    .long("nodes")
+                    .takes_value(true)
+                    .value_name("NODES")
+                    .default_value("-")
+                    .help("Number of nodes for Stockfish to explore in its evaluation"),
+            )
+            .arg(
                 Arg::new("engine")
                     .required(true)
                     .takes_value(true)
@@ -34,6 +44,24 @@ impl Configuration {
                     .help("What internal engine to play using"),
             )
             .get_matches();
+
+        let stockfish_nodes = {
+            let value = matches
+                .value_of("stockfish-depth")
+                .expect("Missing default argument");
+
+            if value == "-" {
+                None
+            } else {
+                match value.parse() {
+                    Ok(nodes) => Some(nodes),
+                    Err(error) => {
+                        eprintln!("Invalid Stockfish node depth: {}", error);
+                        process::exit(1);
+                    }
+                }
+            }
+        };
 
         let engine_kind = {
             let value = matches
@@ -50,6 +78,9 @@ impl Configuration {
             }
         };
 
-        Configuration { engine_kind }
+        Configuration {
+            engine_kind,
+            stockfish_nodes,
+        }
     }
 }

@@ -28,7 +28,7 @@ impl Engine for StockfishEngine {
         "Dummy engine. Returns whatever Stockfish thinks is the best move."
     }
 
-    fn choose_move(&self, game: &mut Game, side: Color) -> ChessMove {
+    fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove {
         todo!()
     }
 }

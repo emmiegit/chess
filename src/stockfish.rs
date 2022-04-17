@@ -18,10 +18,12 @@
 //! This application is essentially "piping through" what
 //! Stockfish determines, with modifications depending on the mode.
 
+use crate::score::Score;
+use chess::{Board, MoveGen};
 use std::fmt::Display;
 use std::io::{BufRead, BufReader, Write};
-use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
-use vampirc_uci::{parse_one, UciMessage};
+use std::process::{self, Child, ChildStdin, ChildStdout, Command, Stdio};
+use vampirc_uci::{parse_one, UciFen, UciInfoAttribute, UciMessage, UciSearchControl};
 
 macro_rules! recv_inner {
     ($self:expr, $buffer:expr $(,)?) => {
@@ -37,12 +39,13 @@ pub struct Stockfish {
     process: Child,
     input: BufReader<ChildStdout>,
     output: ChildStdin,
-    buffer: String,
+    output_buffer: String,
+    nodes_to_search: Option<u64>,
 }
 
 impl Stockfish {
     // Constructor
-    pub fn spawn() -> Self {
+    pub fn spawn(nodes_to_search: Option<u64>) -> Self {
         let mut process = Command::new("stockfish")
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
@@ -57,7 +60,8 @@ impl Stockfish {
             process,
             input: BufReader::new(stdout),
             output: stdin,
-            buffer: String::new(),
+            output_buffer: String::new(),
+            nodes_to_search,
         }
     }
 
@@ -69,9 +73,9 @@ impl Stockfish {
     }
 
     pub fn recv(&mut self) -> UciMessage {
-        self.buffer.clear();
-        recv_inner!(self, &mut self.buffer);
-        parse_one(&self.buffer)
+        self.output_buffer.clear();
+        recv_inner!(self, &mut self.output_buffer);
+        parse_one(&self.output_buffer)
     }
 
     pub fn send<D: Display>(&mut self, command: D) {
@@ -80,5 +84,63 @@ impl Stockfish {
     }
 
     // Methods
-    // TODO evaluate fn
+    pub fn evaluate_position(&mut self, board: &Board) -> () {
+        self.send(UciMessage::Position {
+            startpos: false,
+            fen: Some(UciFen(board.to_string())),
+            moves: Vec::new(),
+        });
+
+        self.send(UciMessage::Go {
+            time_control: None,
+            search_control: Some(UciSearchControl {
+                search_moves: Vec::new(),
+                mate: None,
+                depth: None,
+                nodes: self.nodes_to_search,
+            }),
+        });
+
+        let mut score = None;
+        loop {
+            let message = self.recv();
+            match message {
+                // Finished evaluating
+                UciMessage::BestMove { best_move, .. } => break,
+
+                // Record scores as we receive them
+                // The last score before BestMove is the evaluation
+                UciMessage::Info(attributes) => {
+                    for attribute in attributes {
+                        match attribute {
+                            // Providing a material difference in centipawns
+                            UciInfoAttribute::Score {
+                                cp: Some(centipawns),
+                                ..
+                            } => score = Some(Score::Centipawns(centipawns)),
+
+                            // Found a mate in X moves
+                            UciInfoAttribute::Score {
+                                mate: Some(moves), ..
+                            } => score = Some(Score::from_mate(moves)),
+
+                            // Ignore other info lines
+                            _ => (),
+                        }
+                    }
+                }
+
+                // Terminal
+                UciMessage::Quit => process::exit(0),
+
+                // Ignore other messages
+                _ => (),
+            }
+        }
+    }
+
+    pub fn evaluate_possible_moves(&mut self, board: &Board) -> () {
+        todo!()
+        // XXX MoveGen::new_legal(board)
+    }
 }

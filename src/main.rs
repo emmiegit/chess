@@ -13,6 +13,7 @@
 mod config;
 mod engine;
 mod game;
+mod score;
 mod stockfish;
 
 use self::config::Configuration;

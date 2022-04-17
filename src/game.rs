@@ -13,7 +13,7 @@
 use crate::config::Configuration;
 use crate::engine::Engine;
 use crate::stockfish::Stockfish;
-use chess::{Board, MoveGen};
+use chess::{Board, ChessMove, MoveGen};
 use std::fmt::{self, Debug, Display};
 use std::io::{self, BufRead, Stdin};
 use vampirc_uci::{parse_one, UciMessage};
@@ -43,7 +43,7 @@ impl Game {
             engine: config.engine_kind.build(),
             input: io::stdin(),
             input_buffer: String::new(),
-            stockfish: Stockfish::spawn(),
+            stockfish: Stockfish::spawn(config.stockfish_nodes),
             board: Board::default(),
         }
     }
@@ -79,6 +79,16 @@ impl Game {
     #[inline]
     pub fn moves(&self) -> MoveGen {
         MoveGen::new_legal(&self.board)
+    }
+
+    // Methods
+    pub fn reset(&mut self) {
+        self.board = Board::default();
+    }
+
+    #[inline]
+    pub fn make_move(&mut self, m: ChessMove) {
+        self.board = self.board.make_move_new(m);
     }
 }
 

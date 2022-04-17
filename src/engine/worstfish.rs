@@ -28,7 +28,7 @@ impl Engine for WorstfishEngine {
         "Chooses the move Stockfish dislikes the most."
     }
 
-    fn choose_move(&self, game: &mut Game, side: Color) -> ChessMove {
+    fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove {
         todo!()
     }
 }

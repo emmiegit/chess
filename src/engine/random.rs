@@ -29,7 +29,7 @@ impl Engine for RandomEngine {
         "Chooses a random valid move"
     }
 
-    fn choose_move(&self, game: &mut Game, _side: Color) -> ChessMove {
+    fn choose_move(&self, game: &mut Game, _player: Color) -> ChessMove {
         let mut rng = thread_rng();
 
         *game

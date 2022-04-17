@@ -40,7 +40,7 @@ pub trait Engine {
     fn description(&self) -> &'static str;
 
     /// Given this game, determine what move the engine would like to play.
-    fn choose_move(&self, game: &mut Game, side: Color) -> ChessMove;
+    fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove;
 }
 
 #[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
