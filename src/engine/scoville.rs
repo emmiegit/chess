@@ -48,8 +48,10 @@ impl Engine for ScovilleEngine {
     fn choose_move(&self, game: &mut Game) -> ChessMove {
         let mut rng = thread_rng();
         if rng.gen::<f32>() < self.0 {
+            log!(game.log_file, "Playing strong move");
             StockfishEngine.choose_move(game)
         } else {
+            log!(game.log_file, "Playing random move");
             RandomEngine.choose_move(game)
         }
     }
