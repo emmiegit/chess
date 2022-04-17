@@ -34,7 +34,7 @@ impl ScovilleEngine {
 
 impl Engine for ScovilleEngine {
     fn kind(&self) -> EngineKind {
-        EngineKind::Scoville(self.0)
+        EngineKind::Scoville
     }
 
     fn name(&self) -> &'static str {

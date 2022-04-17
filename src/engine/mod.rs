@@ -34,6 +34,7 @@ pub use self::stockfish::StockfishEngine;
 pub use self::worstfish::WorstfishEngine;
 
 use self::prelude::*;
+use crate::config::Configuration;
 use std::convert::TryFrom;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
@@ -52,7 +53,7 @@ pub trait Engine {
     fn choose_move(&self, game: &mut Game) -> ChessMove;
 }
 
-#[derive(EnumIter, Debug, Copy, Clone, PartialEq)]
+#[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
 pub enum EngineKind {
     Random,
     Pacifist,
@@ -60,7 +61,7 @@ pub enum EngineKind {
     Mediocrefish,
     Drawfish,
     Worstfish,
-    Scoville(f32),
+    Scoville,
 }
 
 impl EngineKind {
@@ -72,7 +73,7 @@ impl EngineKind {
         }
     }
 
-    pub fn build(self) -> Box<dyn Engine> {
+    pub fn build(self, config: &Configuration) -> Box<dyn Engine> {
         match self {
             EngineKind::Random => Box::new(RandomEngine),
             EngineKind::Pacifist => Box::new(PacifistEngine),
@@ -80,7 +81,7 @@ impl EngineKind {
             EngineKind::Mediocrefish => Box::new(MediocrefishEngine),
             EngineKind::Drawfish => Box::new(DrawfishEngine),
             EngineKind::Worstfish => Box::new(WorstfishEngine),
-            EngineKind::Scoville(percent) => Box::new(ScovilleEngine::new(percent)),
+            EngineKind::Scoville => Box::new(ScovilleEngine::new(config.scoville_percent)),
         }
     }
 }
@@ -89,7 +90,7 @@ impl<'a> TryFrom<&'a str> for EngineKind {
     type Error = &'a str;
 
     fn try_from(name: &'a str) -> Result<EngineKind, &'a str> {
-        const VALUES: [(&str, EngineKind); 18] = [
+        const VALUES: [(&str, EngineKind); 20] = [
             ("rand", EngineKind::Random),
             ("random", EngineKind::Random),
             ("pacifist", EngineKind::Pacifist),
@@ -108,6 +109,8 @@ impl<'a> TryFrom<&'a str> for EngineKind {
             ("stalemate", EngineKind::Drawfish),
             ("worst", EngineKind::Worstfish),
             ("worstfish", EngineKind::Worstfish),
+            ("scoville", EngineKind::Scoville),
+            ("mix", EngineKind::Scoville),
         ];
 
         for (value, mode) in VALUES {
