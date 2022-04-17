@@ -21,6 +21,7 @@ mod draw;
 mod mediocre;
 mod pacifist;
 mod random;
+mod scoville;
 mod stockfish;
 mod worstfish;
 
@@ -28,6 +29,7 @@ pub use self::draw::DrawfishEngine;
 pub use self::mediocre::MediocrefishEngine;
 pub use self::pacifist::PacifistEngine;
 pub use self::random::RandomEngine;
+pub use self::scoville::ScovilleEngine;
 pub use self::stockfish::StockfishEngine;
 pub use self::worstfish::WorstfishEngine;
 
@@ -50,7 +52,7 @@ pub trait Engine {
     fn choose_move(&self, game: &mut Game) -> ChessMove;
 }
 
-#[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(EnumIter, Debug, Copy, Clone, PartialEq)]
 pub enum EngineKind {
     Random,
     Pacifist,
@@ -58,6 +60,7 @@ pub enum EngineKind {
     Mediocrefish,
     Drawfish,
     Worstfish,
+    Scoville(f32),
 }
 
 impl EngineKind {
@@ -77,6 +80,7 @@ impl EngineKind {
             EngineKind::Mediocrefish => Box::new(MediocrefishEngine),
             EngineKind::Drawfish => Box::new(DrawfishEngine),
             EngineKind::Worstfish => Box::new(WorstfishEngine),
+            EngineKind::Scoville(percent) => Box::new(ScovilleEngine::new(percent)),
         }
     }
 }
