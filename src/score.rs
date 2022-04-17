@@ -39,8 +39,7 @@ pub enum Score {
 impl Score {
     /// The value returned from the server is positive for our mate and negative for their mate.
     pub fn from_mate(value: i8) -> Self {
-        let uvalue = value.abs() as u8;
-
+        let uvalue = value.unsigned_abs();
         match value.signum() {
             1 => Score::OurMate(uvalue),
             -1 => Score::TheirMate(uvalue),
