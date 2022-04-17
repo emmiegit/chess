@@ -10,9 +10,16 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-//! Representation of the score of a given board.
+//! Representation of scores for given boards.
 
+use chess::ChessMove;
 use std::cmp::Ordering;
+
+#[derive(Debug, Copy, Clone)]
+pub struct ScoredMove {
+    pub chess_move: ChessMove,
+    pub score: Score,
+}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Score {
