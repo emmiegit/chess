@@ -5,7 +5,7 @@
        alt="Build status">
 </a>
 
-Chess engine wrapper utility created for fun. Intended for use with xboard; utilizes the [Universal Chess Interface](https://en.wikipedia.org/wiki/Universal_Chess_Interface).
+Chess engine wrapper created for fun. Intended for use with xboard; utilizes the [Universal Chess Interface](https://en.wikipedia.org/wiki/Universal_Chess_Interface).
 
 ## Requirements
 

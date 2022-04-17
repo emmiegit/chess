@@ -1,7 +1,7 @@
 /*
  * engine/mod.rs
  *
- * mallard-chess - Chess engine wrapper utility for fun
+ * mallard-chess - Chess engine wrapper for fun
  * Copyright (C) 2022 Ammon Smith
  *
  * mallard-chess is available free of charge under the terms of the MIT

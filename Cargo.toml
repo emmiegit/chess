@@ -1,6 +1,6 @@
 [package]
 name = "mallard-chess"
-description = "Chess engine wrapper utility for fun"
+description = "Chess engine wrapper for fun"
 repository = "https://github.com/ammongit/chess"
 readme = "README.md"
 license = "MIT"
