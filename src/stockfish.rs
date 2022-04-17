@@ -173,7 +173,16 @@ impl Stockfish {
         MoveGen::new_legal(board)
             .map(|chess_move| {
                 board.make_move(chess_move, &mut possible_board);
-                let score = self.evaluate_position(&possible_board).score;
+                let score = -self.evaluate_position(&possible_board).score;
+
+                // We are attempting to score / recommend speculative moves,
+                // but evaluate_position() checks moves beyond that, that is,
+                // for the opposite player. So we need to ensure we store the
+                // possible move at the iterator level, not the one from
+                // evaluate_position().
+                //
+                // Similarly, we negate the score from this position because
+                // it was calculated from the opponent's perspective.
                 ScoredMove { chess_move, score }
             })
             .collect()
