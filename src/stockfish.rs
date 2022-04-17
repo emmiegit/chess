@@ -113,7 +113,11 @@ impl Stockfish {
             match self.receive() {
                 // Finished evaluating
                 UciMessage::BestMove { best_move, .. } => {
-                    log!(self.log_file, "Stockfish finished, found best move: {:?}", best_move);
+                    log!(
+                        self.log_file,
+                        "Stockfish finished, found best move: {:?}",
+                        best_move,
+                    );
 
                     chess_move = best_move;
                     break;
@@ -212,7 +216,9 @@ impl Drop for Stockfish {
         // Check if it's exited after a bit
         thread::sleep(Duration::from_millis(10));
         match self.process.try_wait() {
-            Ok(Some(status)) if status.success() => log!(self.log_file, "Stockfish exited successfully"),
+            Ok(Some(status)) if status.success() => {
+                log!(self.log_file, "Stockfish exited successfully");
+            }
             Ok(Some(_)) => log!(self.log_file, "Stockfish exited with errors"),
             Err(error) => log!(self.log_file, "Stockfish has an unknown status: {}", error),
             Ok(None) => {
