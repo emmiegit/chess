@@ -19,7 +19,7 @@
 //! Stockfish determines, with modifications depending on the mode.
 
 use crate::score::{Score, ScoredMove};
-use chess::{Board, MoveGen};
+use chess::{Board, BoardStatus, MoveGen};
 use std::fmt::Display;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
@@ -183,16 +183,24 @@ impl Stockfish {
         MoveGen::new_legal(board)
             .map(|chess_move| {
                 board.make_move(chess_move, &mut possible_board);
-                let score = -self.evaluate_position(&possible_board).score;
+                let score = match possible_board.status() {
+                    BoardStatus::Ongoing => {
+                        // We are attempting to score / recommend speculative moves,
+                        // but evaluate_position() checks moves beyond that, that is,
+                        // for the opposite player. So we need to ensure we store the
+                        // possible move at the iterator level, not the one from
+                        // evaluate_position().
+                        //
+                        // Similarly, we negate the score from this position because
+                        // it was calculated from the opponent's perspective.
+                        -self.evaluate_position(&possible_board).score
+                    }
 
-                // We are attempting to score / recommend speculative moves,
-                // but evaluate_position() checks moves beyond that, that is,
-                // for the opposite player. So we need to ensure we store the
-                // possible move at the iterator level, not the one from
-                // evaluate_position().
-                //
-                // Similarly, we negate the score from this position because
-                // it was calculated from the opponent's perspective.
+                    // Game is finished, return immediate score
+                    BoardStatus::Checkmate => Score::OurMate(0),
+                    BoardStatus::Stalemate => Score::Stalemate(0),
+                };
+
                 ScoredMove { chess_move, score }
             })
             .collect()
