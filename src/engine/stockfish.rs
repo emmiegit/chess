@@ -28,7 +28,7 @@ impl Engine for StockfishEngine {
         "Boring engine. Simply returns whatever Stockfish thinks is the best move."
     }
 
-    fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove {
+    fn choose_move(&self, game: &mut Game) -> ChessMove {
         game.stockfish.evaluate_position(&game.board).chess_move
     }
 }

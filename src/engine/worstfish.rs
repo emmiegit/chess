@@ -28,7 +28,7 @@ impl Engine for WorstfishEngine {
         "Chooses the move Stockfish dislikes the most."
     }
 
-    fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove {
+    fn choose_move(&self, game: &mut Game) -> ChessMove {
         // Choose the move with the lowest score
         // Since this is sorted in increasing order, the worst move should be the first one.
         game.stockfish
