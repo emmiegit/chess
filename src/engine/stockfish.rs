@@ -29,6 +29,6 @@ impl Engine for StockfishEngine {
     }
 
     fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove {
-        todo!()
+        game.stockfish.evaluate_position(&game.board).chess_move
     }
 }
