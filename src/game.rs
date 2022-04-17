@@ -52,7 +52,10 @@ impl Game {
             .read_line(&mut self.input_buffer)
             .expect("Unable to read from stdin");
 
-        log!(self.log_file, "Receiving message: {}", &self.input_buffer);
+        if !self.input_buffer.is_empty() {
+            log!(self.log_file, "Receiving message: {}", &self.input_buffer);
+        }
+
         parse_one(&self.input_buffer)
     }
 
