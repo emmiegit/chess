@@ -17,11 +17,13 @@ mod prelude {
 }
 
 mod mediocrefish;
+mod pacifist;
 mod random;
 mod stockfish;
 mod worstfish;
 
 pub use self::mediocrefish::MediocrefishEngine;
+pub use self::pacifist::PacifistEngine;
 pub use self::random::RandomEngine;
 pub use self::stockfish::StockfishEngine;
 pub use self::worstfish::WorstfishEngine;
@@ -48,6 +50,7 @@ pub trait Engine {
 #[derive(EnumIter, Debug, Copy, Clone, PartialEq, Eq)]
 pub enum EngineKind {
     Random,
+    Pacifist,
     Stockfish,
     Mediocrefish,
     Worstfish,
@@ -65,6 +68,7 @@ impl EngineKind {
     pub fn build(self) -> Box<dyn Engine> {
         match self {
             EngineKind::Random => Box::new(RandomEngine),
+            EngineKind::Pacifist => Box::new(PacifistEngine),
             EngineKind::Stockfish => Box::new(StockfishEngine),
             EngineKind::Mediocrefish => Box::new(MediocrefishEngine),
             EngineKind::Worstfish => Box::new(WorstfishEngine),
