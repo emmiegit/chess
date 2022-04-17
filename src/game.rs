@@ -83,7 +83,11 @@ impl Game {
                 UciMessage::Uci => {
                     self.send(UciMessage::UciOk);
                     self.send(UciMessage::Id {
-                        name: Some(env!("CARGO_PKG_NAME").into()),
+                        name: Some(format!("{} ({:?})", env!("CARGO_PKG_NAME"), engine.kind())),
+                        author: None,
+                    });
+                    self.send(UciMessage::Id {
+                        name: None,
                         author: Some(env!("CARGO_PKG_AUTHORS").into()),
                     });
                 }
