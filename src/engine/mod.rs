@@ -16,12 +16,14 @@ mod prelude {
     pub use chess::{ChessMove, Color};
 }
 
+mod draw;
 mod mediocre;
 mod pacifist;
 mod random;
 mod stockfish;
 mod worstfish;
 
+pub use self::draw::DrawfishEngine;
 pub use self::mediocre::MediocrefishEngine;
 pub use self::pacifist::PacifistEngine;
 pub use self::random::RandomEngine;
@@ -53,6 +55,7 @@ pub enum EngineKind {
     Pacifist,
     Stockfish,
     Mediocrefish,
+    Drawfish,
     Worstfish,
 }
 
@@ -71,6 +74,7 @@ impl EngineKind {
             EngineKind::Pacifist => Box::new(PacifistEngine),
             EngineKind::Stockfish => Box::new(StockfishEngine),
             EngineKind::Mediocrefish => Box::new(MediocrefishEngine),
+            EngineKind::Drawfish => Box::new(DrawfishEngine),
             EngineKind::Worstfish => Box::new(WorstfishEngine),
         }
     }
@@ -80,7 +84,7 @@ impl<'a> TryFrom<&'a str> for EngineKind {
     type Error = &'a str;
 
     fn try_from(name: &'a str) -> Result<EngineKind, &'a str> {
-        const VALUES: [(&str, EngineKind); 14] = [
+        const VALUES: [(&str, EngineKind); 18] = [
             ("rand", EngineKind::Random),
             ("random", EngineKind::Random),
             ("pacifist", EngineKind::Pacifist),
@@ -93,6 +97,10 @@ impl<'a> TryFrom<&'a str> for EngineKind {
             ("meh", EngineKind::Mediocrefish),
             ("mediocre", EngineKind::Mediocrefish),
             ("mediocrefish", EngineKind::Mediocrefish),
+            ("draw", EngineKind::Drawfish),
+            ("drawfish", EngineKind::Drawfish),
+            ("stale", EngineKind::Drawfish),
+            ("stalemate", EngineKind::Drawfish),
             ("worst", EngineKind::Worstfish),
             ("worstfish", EngineKind::Worstfish),
         ];
