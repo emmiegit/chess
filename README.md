@@ -16,7 +16,10 @@ This code should be portable, but I do not use Windows and am not confident it w
 ## Execution
 
 ```
-cargo run --release -- [options]
+cargo run --release -- [options] <engine>
 ```
 
-Run with `--help` for command-line usage.
+Run with `--help` for command-line usage. Current engines are:
+* `stockfish` (Run Stockfish normally)
+* `worstfish` (Use Stockfish to choose the worst-scoring moves)
+* `random` (Choose moves at random)
