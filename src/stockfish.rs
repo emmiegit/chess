@@ -108,6 +108,8 @@ impl Stockfish {
             match self.receive() {
                 // Finished evaluating
                 UciMessage::BestMove { best_move, .. } => {
+                    eprintln!("Stockfish finished, found best move: {:?}", best_move);
+
                     chess_move = best_move;
                     break;
                 }
@@ -116,6 +118,8 @@ impl Stockfish {
                 // The last score before BestMove is the evaluation
                 UciMessage::Info(attributes) => {
                     for attribute in attributes {
+                        eprintln!("Stockfish sent information: {:?}", attribute);
+
                         match attribute {
                             // Providing a material difference in centipawns
                             UciInfoAttribute::Score {
