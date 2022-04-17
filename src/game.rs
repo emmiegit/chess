@@ -17,6 +17,7 @@ use chess::{Board, MoveGen};
 use std::fmt::Display;
 use std::io::{self, BufRead, Stdin};
 use std::process;
+use std::str::FromStr;
 use vampirc_uci::{parse_one, UciMessage};
 
 #[derive(Debug)]
@@ -53,7 +54,7 @@ impl Game {
         println!("{}", command);
     }
 
-    // Methods
+    // Execution
 
     /// Run only once to initialize the UCI connection.
     pub fn setup(&mut self) {
@@ -67,9 +68,32 @@ impl Game {
         }
     }
 
-    #[inline]
-    pub fn moves(&self) -> MoveGen {
-        MoveGen::new_legal(&self.board)
+    pub fn process(&mut self, engine: &dyn Engine) {
+        match self.receive() {
+            UciMessage::Position {
+                startpos,
+                fen,
+                moves,
+            } => {
+                match (startpos, fen) {
+                    (true, None) => self.board = Board::default(),
+                    (false, Some(fen)) => {
+                        self.board = Board::from_str(&fen.0).expect("Invalid FEN from server")
+                    }
+                    _ => panic!("Inconsistent startpos / fen in UciMessage::Position"),
+                }
+
+                for m in moves {
+                    self.board = self.board.make_move_new(m.into());
+                }
+            }
+
+            // Terminal messages
+            UciMessage::Quit => process::exit(0),
+
+            // Ignore unknown or unexpected messages
+            _ => (),
+        }
     }
 
     pub fn decide_move(&mut self, engine: &dyn Engine) {
@@ -79,5 +103,11 @@ impl Game {
             best_move: chosen_move.into(),
             ponder: None,
         });
+    }
+
+    // Methods
+    #[inline]
+    pub fn moves(&self) -> MoveGen {
+        MoveGen::new_legal(&self.board)
     }
 }

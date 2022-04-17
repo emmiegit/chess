@@ -129,10 +129,10 @@ impl Stockfish {
                     }
                 }
 
-                // Terminal
+                // Terminal messages
                 UciMessage::Quit => process::exit(0),
 
-                // Ignore other messages
+                // Ignore unknown or unexpected messages
                 _ => (),
             }
         }
