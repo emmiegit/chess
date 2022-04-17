@@ -29,6 +29,12 @@ impl Engine for WorstfishEngine {
     }
 
     fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove {
-        todo!()
+        // Choose the move with the lowest score
+        // Since this is sorted in increasing order, the worst move should be the first one.
+        game.stockfish
+            .evaluate_possible_moves(&game.board)
+            .first()
+            .expect("No legal moves")
+            .chess_move
     }
 }
