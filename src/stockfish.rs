@@ -25,15 +25,6 @@ use std::io::{BufRead, BufReader, Write};
 use std::process::{self, Child, ChildStdin, ChildStdout, Command, Stdio};
 use vampirc_uci::{parse_one, UciFen, UciInfoAttribute, UciMessage, UciSearchControl};
 
-macro_rules! recv_inner {
-    ($self:expr, $buffer:expr $(,)?) => {
-        $self
-            .input
-            .read_line($buffer)
-            .expect("Unable to read from stockfish")
-    };
-}
-
 #[derive(Debug)]
 pub struct Stockfish {
     process: Child,
@@ -66,9 +57,12 @@ impl Stockfish {
     }
 
     // Communication
-    pub fn recv(&mut self) -> UciMessage {
+    pub fn receive(&mut self) -> UciMessage {
         self.output_buffer.clear();
-        recv_inner!(self, &mut self.output_buffer);
+        self.input
+            .read_line(&mut self.output_buffer)
+            .expect("Unable to read from stockfish");
+
         parse_one(&self.output_buffer)
     }
 
@@ -104,8 +98,7 @@ impl Stockfish {
         let mut score = None;
 
         loop {
-            let message = self.recv();
-            match message {
+            match self.receive() {
                 // Finished evaluating
                 UciMessage::BestMove { best_move, .. } => {
                     chess_move = best_move.into();

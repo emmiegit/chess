@@ -18,16 +18,6 @@ use std::fmt::{self, Debug, Display};
 use std::io::{self, BufRead, Stdin};
 use vampirc_uci::{parse_one, UciMessage};
 
-macro_rules! recv_inner {
-    ($self:expr, $buffer:expr $(,)?) => {
-        $self
-            .input
-            .lock()
-            .read_line($buffer)
-            .expect("Unable to read from stdin")
-    };
-}
-
 #[derive(Debug)]
 pub struct Game {
     pub board: Board,
@@ -48,9 +38,13 @@ impl Game {
     }
 
     // Communication
-    pub fn recv(&mut self) -> UciMessage {
+    pub fn receive(&mut self) -> UciMessage {
         self.input_buffer.clear();
-        recv_inner!(self, &mut self.input_buffer);
+        self.input
+            .lock()
+            .read_line(&mut self.input_buffer)
+            .expect("Unable to read from stdin");
+
         parse_one(&self.input_buffer)
     }
 
