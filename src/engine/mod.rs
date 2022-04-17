@@ -16,13 +16,13 @@ mod prelude {
     pub use chess::{ChessMove, Color};
 }
 
-mod mediocrefish;
+mod mediocre;
 mod pacifist;
 mod random;
 mod stockfish;
 mod worstfish;
 
-pub use self::mediocrefish::MediocrefishEngine;
+pub use self::mediocre::MediocrefishEngine;
 pub use self::pacifist::PacifistEngine;
 pub use self::random::RandomEngine;
 pub use self::stockfish::StockfishEngine;

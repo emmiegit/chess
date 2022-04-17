@@ -1,5 +1,5 @@
 /*
- * engine/mediocrefish.rs
+ * engine/mediocre.rs
  *
  * mallard-chess - Chess engine wrapper for fun
  * Copyright (C) 2022 Ammon Smith
