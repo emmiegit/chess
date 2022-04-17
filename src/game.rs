@@ -32,8 +32,8 @@ pub struct Game {
     engine: Box<dyn Engine>,
     input: Stdin,
     input_buffer: String,
-    stockfish: Stockfish,
-    board: Board,
+    pub stockfish: Stockfish,
+    pub board: Board,
 }
 
 impl Game {
@@ -65,23 +65,12 @@ impl Game {
         println!("{}", command);
     }
 
-    // Getters
-    #[inline]
-    pub fn stockfish(&mut self) -> &mut Stockfish {
-        &mut self.stockfish
-    }
-
-    #[inline]
-    pub fn board(&mut self) -> &mut Board {
-        &mut self.board
-    }
-
+    // Methods
     #[inline]
     pub fn moves(&self) -> MoveGen {
         MoveGen::new_legal(&self.board)
     }
 
-    // Methods
     pub fn reset(&mut self) {
         self.board = Board::default();
     }
