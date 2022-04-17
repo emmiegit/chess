@@ -126,7 +126,7 @@ impl Stockfish {
                 // Record scores as we receive them
                 // The last score before BestMove is the evaluation
                 UciMessage::Info(attributes) => {
-                    for attribute in attributes {
+                    for attribute in &attributes {
                         log!(self.log_file, "Stockfish sent information: {:?}", attribute);
 
                         match attribute {
@@ -134,17 +134,20 @@ impl Stockfish {
                             UciInfoAttribute::Score {
                                 cp: Some(centipawns),
                                 ..
-                            } => score = Some(Score::Centipawns(centipawns)),
+                            } => score = Some(Score::Centipawns(*centipawns)),
 
                             // Found a mate in X moves
                             UciInfoAttribute::Score {
                                 mate: Some(moves), ..
-                            } => score = Some(Score::from_mate(moves)),
+                            } => score = Some(Score::from_mate(*moves)),
 
                             // Ignore other info lines
                             _ => (),
                         }
                     }
+
+                    // Copy info message to UI
+                    self.send(UciMessage::Info(attributes));
                 }
 
                 // Terminal messages
