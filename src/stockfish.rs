@@ -66,12 +66,6 @@ impl Stockfish {
     }
 
     // Communication
-    pub fn recv_raw(&mut self) -> String {
-        let mut buffer = String::new();
-        recv_inner!(self, &mut buffer);
-        buffer
-    }
-
     pub fn recv(&mut self) -> UciMessage {
         self.output_buffer.clear();
         recv_inner!(self, &mut self.output_buffer);

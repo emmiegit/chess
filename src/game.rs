@@ -49,12 +49,6 @@ impl Game {
     }
 
     // Communication
-    pub fn recv_raw(&mut self) -> String {
-        let mut buffer = String::new();
-        recv_inner!(self, &mut buffer);
-        buffer
-    }
-
     pub fn recv(&mut self) -> UciMessage {
         self.input_buffer.clear();
         recv_inner!(self, &mut self.input_buffer);
