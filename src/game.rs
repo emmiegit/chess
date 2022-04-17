@@ -72,7 +72,7 @@ impl Game {
         MoveGen::new_legal(&self.board)
     }
 
-    pub fn make_move(&mut self, engine: &dyn Engine) {
+    pub fn decide_move(&mut self, engine: &dyn Engine) {
         let chosen_move = engine.choose_move(self);
         self.board = self.board.make_move_new(chosen_move);
         self.send(UciMessage::BestMove {
