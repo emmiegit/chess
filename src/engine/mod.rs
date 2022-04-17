@@ -16,10 +16,12 @@ mod prelude {
     pub use chess::{ChessMove, Color};
 }
 
+mod mediocrefish;
 mod random;
 mod stockfish;
 mod worstfish;
 
+pub use self::mediocrefish::MediocrefishEngine;
 pub use self::random::RandomEngine;
 pub use self::stockfish::StockfishEngine;
 pub use self::worstfish::WorstfishEngine;
@@ -47,6 +49,7 @@ pub trait Engine {
 pub enum EngineKind {
     Random,
     Stockfish,
+    Mediocrefish,
     Worstfish,
 }
 
@@ -63,6 +66,7 @@ impl EngineKind {
         match self {
             EngineKind::Random => Box::new(RandomEngine),
             EngineKind::Stockfish => Box::new(StockfishEngine),
+            EngineKind::Mediocrefish => Box::new(MediocrefishEngine),
             EngineKind::Worstfish => Box::new(WorstfishEngine),
         }
     }
@@ -72,13 +76,16 @@ impl<'a> TryFrom<&'a str> for EngineKind {
     type Error = &'a str;
 
     fn try_from(name: &'a str) -> Result<EngineKind, &'a str> {
-        const VALUES: [(&str, EngineKind); 7] = [
+        const VALUES: [(&str, EngineKind); 10] = [
             ("rand", EngineKind::Random),
             ("random", EngineKind::Random),
             ("boring", EngineKind::Stockfish),
             ("dummy", EngineKind::Stockfish),
             ("passthrough", EngineKind::Stockfish),
             ("stockfish", EngineKind::Stockfish),
+            ("mediocre", EngineKind::Mediocrefish),
+            ("mediocrefish", EngineKind::Mediocrefish),
+            ("worst", EngineKind::Worstfish),
             ("worstfish", EngineKind::Worstfish),
         ];
 
