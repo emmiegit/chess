@@ -1,5 +1,5 @@
 /*
- * engine/passthrough.rs
+ * engine/stockfish.rs
  *
  * mallard-chess - Chess engine wrapper utility for fun
  * Copyright (C) 2022 Ammon Smith
@@ -21,11 +21,11 @@ impl Engine for StockfishEngine {
     }
 
     fn name(&self) -> &'static str {
-        "Stockfish (normal)"
+        "Stockfish (regular)"
     }
 
     fn description(&self) -> &'static str {
-        "Dummy engine. Returns whatever Stockfish thinks is the best move."
+        "Boring engine. Simply returns whatever Stockfish thinks is the best move."
     }
 
     fn choose_move(&self, game: &mut Game, player: Color) -> ChessMove {

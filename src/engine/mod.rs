@@ -16,12 +16,12 @@ mod prelude {
     pub use chess::{ChessMove, Color};
 }
 
-mod passthrough;
 mod random;
+mod stockfish;
 mod worstfish;
 
-pub use self::passthrough::StockfishEngine;
 pub use self::random::RandomEngine;
+pub use self::stockfish::StockfishEngine;
 pub use self::worstfish::WorstfishEngine;
 
 use self::prelude::*;
