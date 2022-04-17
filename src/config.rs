@@ -47,7 +47,7 @@ impl Configuration {
 
         let stockfish_nodes = {
             let value = matches
-                .value_of("stockfish-depth")
+                .value_of("stockfish-nodes")
                 .expect("Missing default argument");
 
             if value == "-" {
