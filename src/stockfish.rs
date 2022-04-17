@@ -23,6 +23,8 @@ use chess::{Board, MoveGen};
 use std::fmt::Display;
 use std::io::{BufRead, BufReader, Write};
 use std::process::{self, Child, ChildStdin, ChildStdout, Command, Stdio};
+use std::thread;
+use std::time::Duration;
 use vampirc_uci::{parse_one, UciFen, UciInfoAttribute, UciMessage, UciSearchControl};
 
 #[derive(Debug)]
@@ -174,6 +176,22 @@ impl Stockfish {
 
 impl Drop for Stockfish {
     fn drop(&mut self) {
+        // Tell stockfish to gracefully quit
         self.send(UciMessage::Quit);
+
+        // Check if it's exited after a bit
+        thread::sleep(Duration::from_millis(10));
+        match self.process.try_wait() {
+            Ok(Some(status)) if status.success() => eprintln!("Stockfish exited successfully"),
+            Ok(Some(_)) => eprintln!("Stockfish exited with errors"),
+            Err(error) => eprintln!("Stockfish has an unknown status: {}", error),
+            Ok(None) => {
+                eprintln!("Stockfish has not yet exited, killing");
+
+                // We don't care if this succeeds or not, just send the signal.
+                // We're done with it and are trying to clean up.
+                let _ = self.process.kill();
+            }
+        }
     }
 }
