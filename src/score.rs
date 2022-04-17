@@ -131,17 +131,20 @@ impl Ord for Score {
 fn sorting() {
     // Actual
     let mut scores = vec![
+        Score::Stalemate(5),
+        Score::OurMate(0),
+        Score::Stalemate(2),
+        Score::Centipawns(500),
+        Score::Stalemate(0),
+        Score::Centipawns(-100),
         Score::Centipawns(50),
         Score::OurMate(5),
-        Score::Centipawns(500),
         Score::Centipawns(-30),
-        Score::TheirMate(2),
         Score::OurMate(2),
-        Score::TheirMate(0),
-        Score::Centipawns(-100),
-        Score::OurMate(0),
-        Score::TheirMate(5),
+        Score::TheirMate(2),
         Score::Centipawns(200),
+        Score::TheirMate(0),
+        Score::TheirMate(5),
     ];
     scores.sort();
 
@@ -150,6 +153,9 @@ fn sorting() {
         Score::TheirMate(0),
         Score::TheirMate(2),
         Score::TheirMate(5),
+        Score::Stalemate(0),
+        Score::Stalemate(2),
+        Score::Stalemate(5),
         Score::Centipawns(-100),
         Score::Centipawns(-30),
         Score::Centipawns(50),
