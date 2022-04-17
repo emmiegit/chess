@@ -122,9 +122,9 @@ impl Game {
                     });
                 }
 
-                UciMessage::ReadyOk => {
+                UciMessage::IsReady => {
                     log!(self.log_file, "Engine readiness requested");
-                    self.send(UciMessage::IsReady);
+                    self.send(UciMessage::ReadyOk);
                 }
 
                 // Terminal messages
