@@ -44,7 +44,13 @@ impl Score {
         match value.signum() {
             1 => Score::OurMate(uvalue),
             -1 => Score::TheirMate(uvalue),
-            _ => panic!("Invalid signum value for from_mate(): {}", value),
+
+            // 0 means mate this turn. Since we're evaluating possible moves for "us",
+            //   this means we lose
+            0 => Score::TheirMate(0),
+
+            // Only returns -1, 0, +1
+            _ => unreachable!("Invalid signum value"),
         }
     }
 }
