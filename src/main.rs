@@ -22,6 +22,7 @@ use self::game::Game;
 fn main() {
     let config = Configuration::load();
     let mut game = Game::new(&config);
+    game.setup();
 
     todo!();
 }

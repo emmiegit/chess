@@ -11,11 +11,12 @@
  */
 
 use crate::config::Configuration;
-use crate::engine::{Engine, EngineKind};
+use crate::engine::Engine;
 use crate::stockfish::Stockfish;
 use chess::{Board, MoveGen};
-use std::fmt::{self, Debug, Display};
+use std::fmt::Display;
 use std::io::{self, BufRead, Stdin};
+use std::process;
 use vampirc_uci::{parse_one, UciMessage};
 
 #[derive(Debug)]
@@ -53,6 +54,19 @@ impl Game {
     }
 
     // Methods
+
+    /// Run only once to initialize the UCI connection.
+    pub fn setup(&mut self) {
+        match self.receive() {
+            UciMessage::Uci => self.send(UciMessage::UciOk),
+            UciMessage::Quit => process::exit(0),
+            other => {
+                eprintln!("Unexpected UCI message on setup: {:#?}", other);
+                process::exit(0);
+            }
+        }
+    }
+
     #[inline]
     pub fn moves(&self) -> MoveGen {
         MoveGen::new_legal(&self.board)
