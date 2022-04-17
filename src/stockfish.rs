@@ -84,6 +84,11 @@ impl Stockfish {
     }
 
     // Methods
+
+    /// Evaluates a board.
+    ///
+    /// It determines the score of a board by having Stockfish return
+    /// its preferred move, as well as its value change based on it.
     pub fn evaluate_position(&mut self, board: &Board) -> ScoredMove {
         self.send(UciMessage::Position {
             startpos: false,
@@ -154,7 +159,12 @@ impl Stockfish {
         ScoredMove { chess_move, score }
     }
 
-    pub fn evaluate_possible_moves(&mut self, board: &Board) -> Vec<ScoredMove> {
+    /// Evaluates all possible moves from the board position.
+    ///
+    /// Using `evaluate_position()`, it sees the Stockfish improvement
+    /// score for each legal move in this position, and then returns
+    /// all the moves and their calculated scores in a list.
+    pub fn evaluate_possible_moves_unsorted(&mut self, board: &Board) -> Vec<ScoredMove> {
         let mut possible_board = Board::default();
 
         MoveGen::new_legal(board)
@@ -163,5 +173,14 @@ impl Stockfish {
                 self.evaluate_position(&possible_board)
             })
             .collect()
+    }
+
+    /// Evaluates all possible moves from the board position, sorted by increasing score value.
+    ///
+    /// See `evaluate_possible_moves_unsorted()`.
+    pub fn evaluate_possible_moves(&mut self, board: &Board) -> Vec<ScoredMove> {
+        let mut scored_moves = self.evaluate_possible_moves_unsorted(board);
+        scored_moves.sort_by_key(|scored_move| scored_move.score);
+        scored_moves
     }
 }
