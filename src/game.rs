@@ -68,7 +68,9 @@ impl Game {
 
         loop {
             match self.receive() {
-                // Set board position
+                // Set game state
+                UciMessage::UciNewGame => self.reset(),
+
                 UciMessage::Position {
                     startpos,
                     fen,
@@ -112,6 +114,10 @@ impl Game {
                 _ => (),
             }
         }
+    }
+
+    pub fn reset(&mut self) {
+        self.board = Board::default();
     }
 
     fn decide_move(&mut self, engine: &dyn Engine) {
