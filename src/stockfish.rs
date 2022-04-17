@@ -154,8 +154,14 @@ impl Stockfish {
         ScoredMove { chess_move, score }
     }
 
-    pub fn evaluate_possible_moves(&mut self, board: &Board) -> () {
-        todo!()
-        // XXX MoveGen::new_legal(board)
+    pub fn evaluate_possible_moves(&mut self, board: &Board) -> Vec<ScoredMove> {
+        let mut possible_board = Board::default();
+
+        MoveGen::new_legal(board)
+            .map(|m| {
+                board.make_move(m, &mut possible_board);
+                self.evaluate_position(&possible_board)
+            })
+            .collect()
     }
 }
