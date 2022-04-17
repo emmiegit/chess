@@ -26,6 +26,4 @@ fn main() {
 
     game.setup();
     game.main_loop(&*engine);
-
-    todo!();
 }
