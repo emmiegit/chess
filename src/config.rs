@@ -27,6 +27,7 @@ pub struct Configuration {
     pub log_file: File,
     pub engine_kind: EngineKind,
     pub stockfish_nodes: Option<u64>,
+    pub scoville_percent: f32,
 }
 
 impl Configuration {
@@ -44,6 +45,18 @@ impl Configuration {
                     .value_name("PATH")
                     .default_value(DEFAULT_LOG_PATH)
                     .help("Log file to output to"),
+            )
+            .arg(
+                Arg::new("scoville-percent")
+                    .short('P')
+                    .long("percent")
+                    .long("scoville-percent")
+                    .takes_value(true)
+                    .value_name("PERCENT")
+                    .default_value("50")
+                    .help(
+                        "What concentration percentage of Stockfish to use in the Scoville engine",
+                    ),
             )
             .arg(
                 Arg::new("stockfish-nodes")
@@ -71,6 +84,20 @@ impl Configuration {
             File::create(path).expect("Unable to create log file")
         };
 
+        let scoville_percent = {
+            let value = matches
+                .value_of("scoville-percent")
+                .expect("Missing default argument");
+
+            match value.parse() {
+                Ok(percent) => percent,
+                Err(error) => {
+                    eprintln!("Invalid Scoville engine percent: {} {}", value, error);
+                    process::exit(1);
+                }
+            }
+        };
+
         let stockfish_nodes = {
             let value = matches
                 .value_of("stockfish-nodes")
@@ -82,7 +109,7 @@ impl Configuration {
                 match value.parse() {
                     Ok(nodes) => Some(nodes),
                     Err(error) => {
-                        eprintln!("Invalid Stockfish node depth: {}", error);
+                        eprintln!("Invalid Stockfish node depth: {} {}", value, error);
                         process::exit(1);
                     }
                 }
@@ -108,6 +135,7 @@ impl Configuration {
             log_file,
             engine_kind,
             stockfish_nodes,
+            scoville_percent,
         }
     }
 }
