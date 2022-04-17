@@ -33,7 +33,7 @@ impl Configuration {
                     .long("nodes")
                     .takes_value(true)
                     .value_name("NODES")
-                    .default_value("-")
+                    .default_value("unlimited")
                     .help("Number of nodes for Stockfish to explore in its evaluation"),
             )
             .arg(
@@ -50,7 +50,7 @@ impl Configuration {
                 .value_of("stockfish-nodes")
                 .expect("Missing default argument");
 
-            if value == "-" {
+            if value == "-" || value == "unlimited" {
                 None
             } else {
                 match value.parse() {
