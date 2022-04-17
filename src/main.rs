@@ -24,6 +24,5 @@ fn main() {
     let engine = config.engine_kind.build();
     let mut game = Game::new(&config);
 
-    game.setup();
     game.main_loop(&*engine);
 }
