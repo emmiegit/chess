@@ -38,7 +38,7 @@ impl Game {
     }
 
     // Communication
-    pub fn receive(&mut self) -> UciMessage {
+    fn receive(&mut self) -> UciMessage {
         self.input_buffer.clear();
         self.input
             .lock()
@@ -48,7 +48,7 @@ impl Game {
         parse_one(&self.input_buffer)
     }
 
-    pub fn send<D: Display>(&mut self, command: D) {
+    fn send<D: Display>(&mut self, command: D) {
         println!("{}", command);
     }
 

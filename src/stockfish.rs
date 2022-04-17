@@ -57,7 +57,7 @@ impl Stockfish {
     }
 
     // Communication
-    pub fn receive(&mut self) -> UciMessage {
+    fn receive(&mut self) -> UciMessage {
         self.output_buffer.clear();
         self.input
             .read_line(&mut self.output_buffer)
@@ -66,7 +66,7 @@ impl Stockfish {
         parse_one(&self.output_buffer)
     }
 
-    pub fn send<D: Display>(&mut self, command: D) {
+    fn send<D: Display>(&mut self, command: D) {
         writeln!(self.output, "{}", command).expect("Unable to write to stockfish");
         self.output.flush().expect("Unable to flush stockfish pipe");
     }
