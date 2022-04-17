@@ -171,3 +171,9 @@ impl Stockfish {
         scored_moves
     }
 }
+
+impl Drop for Stockfish {
+    fn drop(&mut self) {
+        self.send(UciMessage::Quit);
+    }
+}
