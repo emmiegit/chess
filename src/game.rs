@@ -11,9 +11,9 @@
  */
 
 use crate::config::Configuration;
-use crate::engine::Engine;
+use crate::engine::EngineKind;
 use crate::stockfish::Stockfish;
-use chess::{Board, ChessMove, MoveGen};
+use chess::{Board, MoveGen};
 use std::fmt::{self, Debug, Display};
 use std::io::{self, BufRead, Stdin};
 use vampirc_uci::{parse_one, UciMessage};
@@ -28,23 +28,24 @@ macro_rules! recv_inner {
     };
 }
 
+#[derive(Debug)]
 pub struct Game {
-    engine: Box<dyn Engine>,
+    pub engine_kind: EngineKind,
+    pub board: Board,
+    pub stockfish: Stockfish,
     input: Stdin,
     input_buffer: String,
-    pub stockfish: Stockfish,
-    pub board: Board,
 }
 
 impl Game {
     // Constructor
     pub fn new(config: &Configuration) -> Self {
         Game {
-            engine: config.engine_kind.build(),
+            engine_kind: config.engine_kind,
+            board: Board::default(),
+            stockfish: Stockfish::spawn(config.stockfish_nodes),
             input: io::stdin(),
             input_buffer: String::new(),
-            stockfish: Stockfish::spawn(config.stockfish_nodes),
-            board: Board::default(),
         }
     }
 
@@ -72,17 +73,5 @@ impl Game {
     #[inline]
     pub fn make_move(&mut self, m: ChessMove) {
         self.board = self.board.make_move_new(m);
-    }
-}
-
-impl Debug for Game {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_struct("Game")
-            .field("engine", &self.engine.kind())
-            .field("input", &self.input)
-            .field("input_buffer", &self.input_buffer)
-            .field("stockfish", &self.stockfish)
-            .field("board", &self.board)
-            .finish()
     }
 }
