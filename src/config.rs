@@ -15,6 +15,12 @@ use clap::{Arg, Command};
 use std::convert::TryFrom;
 use std::process;
 
+#[cfg(target_os = "windows")]
+const DEFAULT_LOG_PATH: &str = "mallard-chess.log";
+
+#[cfg(not(target_os = "windows"))]
+const DEFAULT_LOG_PATH: &str = "/tmp/mallard-chess.log";
+
 #[derive(Debug)]
 pub struct Configuration {
     pub engine_kind: EngineKind,
@@ -27,6 +33,16 @@ impl Configuration {
             .author(env!("CARGO_PKG_AUTHORS"))
             .version(env!("CARGO_PKG_VERSION"))
             .about(env!("CARGO_PKG_DESCRIPTION"))
+            .arg(
+                Arg::new("log-file")
+                    .short('L')
+                    .long("log")
+                    .long("log-file")
+                    .takes_value(true)
+                    .value_name("PATH")
+                    .default_value(DEFAULT_LOG_PATH)
+                    .help("Log file to output to"),
+            )
             .arg(
                 Arg::new("stockfish-nodes")
                     .short('N')
