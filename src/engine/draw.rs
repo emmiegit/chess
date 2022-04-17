@@ -73,6 +73,6 @@ impl Engine for DrawfishEngine {
 
         // Choose the best-scoring move.
         // Because it sorts from least to greatest, this should be the last one.
-        moves.last().expect("No valid moves").0
+        moves.last().expect("No legal moves").0
     }
 }

@@ -76,7 +76,7 @@ impl Engine for PacifistEngine {
 
         // Choose a random move from our remaining selection
         let mut rng = thread_rng();
-        moves.choose(&mut rng).expect("No valid moves").0
+        moves.choose(&mut rng).expect("No legal moves").0
     }
 }
 

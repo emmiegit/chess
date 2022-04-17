@@ -36,6 +36,6 @@ impl Engine for RandomEngine {
             .moves()
             .collect::<Vec<_>>()
             .choose(&mut rng)
-            .expect("No valid moves")
+            .expect("No legal moves")
     }
 }
