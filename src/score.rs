@@ -14,6 +14,7 @@
 
 use chess::ChessMove;
 use std::cmp::Ordering;
+use std::ops::Neg;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct ScoredMove {
@@ -44,6 +45,22 @@ impl Score {
             1 => Score::OurMate(uvalue),
             -1 => Score::TheirMate(uvalue),
             _ => panic!("Invalid signum value for from_mate(): {}", value),
+        }
+    }
+}
+
+impl Neg for Score {
+    type Output = Self;
+
+    /// Negates this score.
+    ///
+    /// That is, interpret this score from the opposite player's perspective.
+    /// So any gains become losses, our checkmates become their checkmates, etc.
+    fn neg(self) -> Self {
+        match self {
+            Score::Centipawns(value) => Score::Centipawns(-value),
+            Score::OurMate(moves) => Score::TheirMate(moves),
+            Score::TheirMate(moves) => Score::OurMate(moves),
         }
     }
 }
