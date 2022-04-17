@@ -14,7 +14,6 @@ use super::prelude::*;
 use chess::{Board, BoardStatus, MoveGen};
 use rand::prelude::*;
 use std::cmp;
-use std::io::Write;
 
 #[derive(Debug)]
 pub struct PacifistEngine;

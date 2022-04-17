@@ -14,6 +14,7 @@ mod prelude {
     pub use super::{Engine, EngineKind};
     pub use crate::game::Game;
     pub use chess::{ChessMove, Color};
+    pub use std::io::Write;
 }
 
 mod draw;
