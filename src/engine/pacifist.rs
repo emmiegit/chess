@@ -12,6 +12,8 @@
 
 use super::prelude::*;
 use chess::{Board, BoardStatus, MoveGen};
+use rand::prelude::*;
+use std::cmp;
 use std::io::Write;
 
 #[derive(Debug)]
@@ -57,14 +59,25 @@ impl Engine for PacifistEngine {
             .collect::<Vec<_>>();
 
         // Sort moves by score
-        //
-        // This sorts from lowest to highest, so the most pacifist move
-        // is the last item in this list.
         moves.sort_by_key(|&(_, score)| score);
-        log!(game.log_file, "Scored possible moves for pacifism: {:?}", moves);
 
-        // Extract chess move
-        moves.last().expect("No legal moves").0
+        log!(
+            game.log_file,
+            "Scored possible moves for pacifism: {:?}",
+            moves,
+        );
+
+        // Find the highest possible score for this position
+        let max_score = moves
+            .iter()
+            .fold(-999, |best, &(_, score)| cmp::max(best, score));
+
+        // Then filter out all scores worse than that
+        moves.retain(|&(_, score)| score == max_score);
+
+        // Choose a random move from our remaining selection
+        let mut rng = thread_rng();
+        moves.choose(&mut rng).expect("No valid moves").0
     }
 }
 
