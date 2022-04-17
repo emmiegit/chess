@@ -16,7 +16,6 @@ use crate::stockfish::Stockfish;
 use chess::{Board, MoveGen};
 use std::fmt::Display;
 use std::io::{self, BufRead, Stdin};
-use std::process;
 use std::str::FromStr;
 use vampirc_uci::{parse_one, UciMessage};
 
