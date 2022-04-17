@@ -18,7 +18,7 @@
 //! This application is essentially "piping through" what
 //! Stockfish determines, with modifications depending on the mode.
 
-use crate::score::Score;
+use crate::score::{Score, ScoredMove};
 use chess::{Board, MoveGen};
 use std::fmt::Display;
 use std::io::{BufRead, BufReader, Write};
@@ -84,7 +84,7 @@ impl Stockfish {
     }
 
     // Methods
-    pub fn evaluate_position(&mut self, board: &Board) -> () {
+    pub fn evaluate_position(&mut self, board: &Board) -> ScoredMove {
         self.send(UciMessage::Position {
             startpos: false,
             fen: Some(UciFen(board.to_string())),
@@ -101,12 +101,17 @@ impl Stockfish {
             }),
         });
 
+        let chess_move;
         let mut score = None;
+
         loop {
             let message = self.recv();
             match message {
                 // Finished evaluating
-                UciMessage::BestMove { best_move, .. } => break,
+                UciMessage::BestMove { best_move, .. } => {
+                    chess_move = best_move.into();
+                    break;
+                }
 
                 // Record scores as we receive them
                 // The last score before BestMove is the evaluation
@@ -137,6 +142,16 @@ impl Stockfish {
                 _ => (),
             }
         }
+
+        // If no score value has been set, then Stockfish isn't behaving properly.
+        let score =
+            score.expect("Stockfish didn't return score information before deciding a move");
+
+        // Return result
+        //
+        // This is the best move it found, and the score of this move,
+        // which rates our current position.
+        ScoredMove { chess_move, score }
     }
 
     pub fn evaluate_possible_moves(&mut self, board: &Board) -> () {

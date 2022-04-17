@@ -15,7 +15,7 @@
 use chess::ChessMove;
 use std::cmp::Ordering;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct ScoredMove {
     pub chess_move: ChessMove,
     pub score: Score,
