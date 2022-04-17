@@ -171,9 +171,10 @@ impl Stockfish {
         let mut possible_board = Board::default();
 
         MoveGen::new_legal(board)
-            .map(|m| {
-                board.make_move(m, &mut possible_board);
-                self.evaluate_position(&possible_board)
+            .map(|chess_move| {
+                board.make_move(chess_move, &mut possible_board);
+                let score = self.evaluate_position(&possible_board).score;
+                ScoredMove { chess_move, score }
             })
             .collect()
     }
