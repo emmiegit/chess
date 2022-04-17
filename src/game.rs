@@ -99,6 +99,10 @@ impl Game {
                 // Request move decision from engine
                 UciMessage::Go { .. } => self.decide_move(engine),
 
+                // Status messages
+                UciMessage::Uci => self.send(UciMessage::UciOk),
+                UciMessage::ReadyOk => self.send(UciMessage::IsReady),
+
                 // Terminal messages
                 UciMessage::Quit => break,
 
