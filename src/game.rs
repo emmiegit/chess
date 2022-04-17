@@ -11,7 +11,7 @@
  */
 
 use crate::config::Configuration;
-use crate::engine::EngineKind;
+use crate::engine::{Engine, EngineKind};
 use crate::stockfish::Stockfish;
 use chess::{Board, MoveGen};
 use std::fmt::{self, Debug, Display};
@@ -30,7 +30,6 @@ macro_rules! recv_inner {
 
 #[derive(Debug)]
 pub struct Game {
-    pub engine_kind: EngineKind,
     pub board: Board,
     pub stockfish: Stockfish,
     input: Stdin,
@@ -41,7 +40,6 @@ impl Game {
     // Constructor
     pub fn new(config: &Configuration) -> Self {
         Game {
-            engine_kind: config.engine_kind,
             board: Board::default(),
             stockfish: Stockfish::spawn(config.stockfish_nodes),
             input: io::stdin(),
@@ -70,8 +68,8 @@ impl Game {
         self.board = Board::default();
     }
 
-    #[inline]
-    pub fn make_move(&mut self, m: ChessMove) {
-        self.board = self.board.make_move_new(m);
+    pub fn make_move(&mut self, engine: &dyn Engine) {
+        let chosen_move = engine.choose_move(self);
+        self.board = self.board.make_move_new(chosen_move);
     }
 }
