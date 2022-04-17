@@ -35,6 +35,9 @@ pub enum Score {
 
     /// The number of moves until the engine is checkmated.
     TheirMate(u8),
+
+    /// The number of moves until a drawn game.
+    Stalemate(u8),
 }
 
 impl Score {
@@ -67,6 +70,9 @@ impl Neg for Score {
             Score::Centipawns(value) => Score::Centipawns(-value),
             Score::OurMate(moves) => Score::TheirMate(moves),
             Score::TheirMate(moves) => Score::OurMate(moves),
+
+            // Stalemates are the same for both players, so keep the same
+            Score::Stalemate(moves) => Score::Stalemate(moves),
         }
     }
 }
@@ -96,6 +102,18 @@ impl Ord for Score {
             (Score::OurMate(_), Score::TheirMate(_)) => Ordering::Greater,
             (Score::TheirMate(_), Score::OurMate(_)) => Ordering::Less,
 
+            // We prefer to win rather than draw.
+            (Score::OurMate(_), Score::Stalemate(_)) => Ordering::Greater,
+            (Score::Stalemate(_), Score::OurMate(_)) => Ordering::Less,
+
+            // Similarly, we prefer to draw rather than lose.
+            (Score::TheirMate(_), Score::Stalemate(_)) => Ordering::Less,
+            (Score::Stalemate(_), Score::TheirMate(_)) => Ordering::Greater,
+
+            // Any change in material is better than a draw.
+            (Score::Centipawns(_), Score::Stalemate(_)) => Ordering::Greater,
+            (Score::Stalemate(_), Score::Centipawns(_)) => Ordering::Less,
+
             // If they're of the same type, then compare appropriately.
             //
             // For centipawns, just see which is larger.
@@ -104,6 +122,7 @@ impl Ord for Score {
             (Score::Centipawns(x), Score::Centipawns(y)) => x.cmp(y),
             (Score::OurMate(x), Score::OurMate(y)) => y.cmp(x),
             (Score::TheirMate(x), Score::TheirMate(y)) => x.cmp(y),
+            (Score::Stalemate(x), Score::Stalemate(y)) => x.cmp(y),
         }
     }
 }
