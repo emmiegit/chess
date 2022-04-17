@@ -24,7 +24,7 @@ impl ScovilleEngine {
             "Percentage for Scoville engine not a normal number",
         );
         assert!(
-            percent >= 0.0 && percent <= 100.0,
+            (0.0..=100.0).contains(&percent),
             "Percentage for Scoville engine not between 0-100%",
         );
 
