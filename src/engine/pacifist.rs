@@ -61,7 +61,7 @@ impl Engine for PacifistEngine {
         // This sorts from lowest to highest, so the most pacifist move
         // is the last item in this list.
         moves.sort_by_key(|&(_, score)| score);
-        log!(game.log_file, "Scored possible moves for pacifism:\n{:#?}", moves);
+        log!(game.log_file, "Scored possible moves for pacifism: {:?}", moves);
 
         // Extract chess move
         moves.last().expect("No legal moves").0
