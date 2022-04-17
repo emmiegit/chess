@@ -27,7 +27,7 @@ pub struct Game {
     pub stockfish: Stockfish,
     input: Stdin,
     input_buffer: String,
-    log_file: Rc<File>,
+    pub log_file: Rc<File>,
 }
 
 impl Game {
