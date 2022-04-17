@@ -21,5 +21,6 @@ cargo run --release -- [options] <engine>
 
 Run with `--help` for command-line usage. Current engines are:
 * `stockfish` (Run Stockfish normally)
+* `mediocrefish` (Uses Stockfish to choose a median score move)
 * `worstfish` (Use Stockfish to choose the worst-scoring moves)
 * `random` (Choose moves at random)
