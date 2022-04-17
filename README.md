@@ -13,6 +13,8 @@ To use it in xboard, add engine lines similar to the following:
 "Worstfish" -fcp "mallard-chess -N 10000 worstfish" -fUCI
 ```
 
+These chess engines are my implementation of some of the silly strategies used in [tom7](http://tom7.org)'s fantastic video [30 Weird Chess Algorithms: Elo World](https://www.youtube.com/watch?v=DpXy041BIlA).
+
 ## Requirements
 
 Because the engine uses [stockfish](https://stockfishchess.org/) for actual game engine decisioning, it must be installed and available in your `$PATH`.
