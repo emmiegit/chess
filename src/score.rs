@@ -107,3 +107,39 @@ impl Ord for Score {
         }
     }
 }
+
+#[test]
+fn sorting() {
+    // Actual
+    let mut scores = vec![
+        Score::Centipawns(50),
+        Score::OurMate(5),
+        Score::Centipawns(500),
+        Score::Centipawns(-30),
+        Score::TheirMate(2),
+        Score::OurMate(2),
+        Score::TheirMate(0),
+        Score::Centipawns(-100),
+        Score::OurMate(0),
+        Score::TheirMate(5),
+        Score::Centipawns(200),
+    ];
+    scores.sort();
+
+    // Expected
+    let sorted = vec![
+        Score::TheirMate(0),
+        Score::TheirMate(2),
+        Score::TheirMate(5),
+        Score::Centipawns(-100),
+        Score::Centipawns(-30),
+        Score::Centipawns(50),
+        Score::Centipawns(200),
+        Score::Centipawns(500),
+        Score::OurMate(5),
+        Score::OurMate(2),
+        Score::OurMate(0),
+    ];
+
+    assert_eq!(scores, sorted, "Sorted score list did not match expected");
+}
