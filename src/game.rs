@@ -74,35 +74,37 @@ impl Game {
         }
     }
 
-    pub fn process(&mut self, engine: &dyn Engine) {
-        match self.receive() {
-            // Set board position
-            UciMessage::Position {
-                startpos,
-                fen,
-                moves,
-            } => {
-                match (startpos, fen) {
-                    (true, None) => self.board = Board::default(),
-                    (false, Some(fen)) => {
-                        self.board = Board::from_str(&fen.0).expect("Invalid FEN from server")
+    pub fn main_loop(&mut self, engine: &dyn Engine) {
+        loop {
+            match self.receive() {
+                // Set board position
+                UciMessage::Position {
+                    startpos,
+                    fen,
+                    moves,
+                } => {
+                    match (startpos, fen) {
+                        (true, None) => self.board = Board::default(),
+                        (false, Some(fen)) => {
+                            self.board = Board::from_str(&fen.0).expect("Invalid FEN from server")
+                        }
+                        _ => panic!("Inconsistent startpos / fen in UciMessage::Position"),
                     }
-                    _ => panic!("Inconsistent startpos / fen in UciMessage::Position"),
+
+                    for m in moves {
+                        self.board = self.board.make_move_new(m.into());
+                    }
                 }
 
-                for m in moves {
-                    self.board = self.board.make_move_new(m.into());
-                }
+                // Request move decision from engine
+                UciMessage::Go { .. } => self.decide_move(engine),
+
+                // Terminal messages
+                UciMessage::Quit => break,
+
+                // Ignore unknown or unexpected messages
+                _ => (),
             }
-
-            // Request move decision from engine
-            UciMessage::Go { .. } => self.decide_move(engine),
-
-            // Terminal messages
-            UciMessage::Quit => process::exit(0),
-
-            // Ignore unknown or unexpected messages
-            _ => (),
         }
     }
 

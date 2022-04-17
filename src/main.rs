@@ -25,6 +25,7 @@ fn main() {
     let mut game = Game::new(&config);
 
     game.setup();
+    game.main_loop(&*engine);
 
     todo!();
 }
