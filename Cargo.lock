@@ -257,7 +257,7 @@ checksum = "cb691a747a7ab48abc15c5b42066eaafde10dc427e3b6ee2a1cf43db04c763bd"
 
 [[package]]
 name = "mallard-chess"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "chess",
  "clap",
