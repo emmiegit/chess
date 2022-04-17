@@ -34,3 +34,4 @@ Run with `--help` for command-line usage. Current engines are:
 * `worstfish` (Use Stockfish to choose the worst-scoring moves)
 * `mediocrefish` (Uses Stockfish to choose a median score move)
 * `drawfish` (Uses Stockfish to attempt to stalemate)
+* `scoville` (Plays X% of moves using Stockfish, diluting the rest with random moves)
