@@ -15,7 +15,9 @@ use crate::engine::Engine;
 use crate::stockfish::Stockfish;
 use chess::{Board, MoveGen};
 use std::fmt::Display;
-use std::io::{self, BufRead, Stdin};
+use std::fs::File;
+use std::io::{self, BufRead, Stdin, Write};
+use std::rc::Rc;
 use std::str::FromStr;
 use vampirc_uci::{parse_one, UciMessage};
 
@@ -25,16 +27,20 @@ pub struct Game {
     pub stockfish: Stockfish,
     input: Stdin,
     input_buffer: String,
+    log_file: Rc<File>,
 }
 
 impl Game {
     // Constructor
-    pub fn new(config: &Configuration) -> Self {
+    pub fn new(config: Configuration) -> Self {
+        let log_file = Rc::new(config.log_file);
+
         Game {
             board: Board::default(),
-            stockfish: Stockfish::spawn(config.stockfish_nodes),
+            stockfish: Stockfish::spawn(config.stockfish_nodes, Rc::clone(&log_file)),
             input: io::stdin(),
             input_buffer: String::new(),
+            log_file,
         }
     }
 
@@ -46,15 +52,20 @@ impl Game {
             .read_line(&mut self.input_buffer)
             .expect("Unable to read from stdin");
 
+        log!(self.log_file, "Receiving message: {}", &self.input_buffer);
         parse_one(&self.input_buffer)
     }
 
     fn send<D: Display>(&mut self, command: D) {
+        log!(self.log_file, "Sending message: {}", command);
         println!("{}", command);
     }
 
     // Execution
     pub fn main_loop(&mut self, engine: &dyn Engine) {
+        log!(self.log_file, "Starting game main loop");
+        log!(self.log_file, "Engine: {:?}", engine.kind());
+
         loop {
             match self.receive() {
                 // Set board position

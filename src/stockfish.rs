@@ -21,8 +21,10 @@
 use crate::score::{Score, ScoredMove};
 use chess::{Board, MoveGen};
 use std::fmt::Display;
+use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 use std::process::{self, Child, ChildStdin, ChildStdout, Command, Stdio};
+use std::rc::Rc;
 use std::thread;
 use std::time::Duration;
 use vampirc_uci::{parse_one, UciFen, UciInfoAttribute, UciMessage, UciSearchControl};
@@ -34,11 +36,12 @@ pub struct Stockfish {
     output: ChildStdin,
     output_buffer: String,
     nodes_to_search: Option<u64>,
+    log_file: Rc<File>,
 }
 
 impl Stockfish {
     // Constructor
-    pub fn spawn(nodes_to_search: Option<u64>) -> Self {
+    pub fn spawn(nodes_to_search: Option<u64>, log_file: Rc<File>) -> Self {
         let mut process = Command::new("stockfish")
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
@@ -55,6 +58,7 @@ impl Stockfish {
             output: stdin,
             output_buffer: String::new(),
             nodes_to_search,
+            log_file,
         }
     }
 
@@ -80,7 +84,8 @@ impl Stockfish {
     /// It determines the score of a board by having Stockfish return
     /// its preferred move, as well as its value change based on it.
     pub fn evaluate_position(&mut self, board: &Board) -> ScoredMove {
-        eprintln!(
+        log!(
+            self.log_file,
             "Asking Stockfish to evaluate position (hash {})",
             board.get_hash(),
         );
@@ -108,7 +113,7 @@ impl Stockfish {
             match self.receive() {
                 // Finished evaluating
                 UciMessage::BestMove { best_move, .. } => {
-                    eprintln!("Stockfish finished, found best move: {:?}", best_move);
+                    log!(self.log_file, "Stockfish finished, found best move: {:?}", best_move);
 
                     chess_move = best_move;
                     break;
@@ -118,7 +123,7 @@ impl Stockfish {
                 // The last score before BestMove is the evaluation
                 UciMessage::Info(attributes) => {
                     for attribute in attributes {
-                        eprintln!("Stockfish sent information: {:?}", attribute);
+                        log!(self.log_file, "Stockfish sent information: {:?}", attribute);
 
                         match attribute {
                             // Providing a material difference in centipawns
@@ -163,7 +168,8 @@ impl Stockfish {
     /// score for each legal move in this position, and then returns
     /// all the moves and their calculated scores in a list.
     pub fn evaluate_possible_moves_unsorted(&mut self, board: &Board) -> Vec<ScoredMove> {
-        eprintln!(
+        log!(
+            self.log_file,
             "Asking Stockfish to evaluate all possible moves for board (hash {})",
             board.get_hash(),
         );
@@ -206,11 +212,11 @@ impl Drop for Stockfish {
         // Check if it's exited after a bit
         thread::sleep(Duration::from_millis(10));
         match self.process.try_wait() {
-            Ok(Some(status)) if status.success() => eprintln!("Stockfish exited successfully"),
-            Ok(Some(_)) => eprintln!("Stockfish exited with errors"),
-            Err(error) => eprintln!("Stockfish has an unknown status: {}", error),
+            Ok(Some(status)) if status.success() => log!(self.log_file, "Stockfish exited successfully"),
+            Ok(Some(_)) => log!(self.log_file, "Stockfish exited with errors"),
+            Err(error) => log!(self.log_file, "Stockfish has an unknown status: {}", error),
             Ok(None) => {
-                eprintln!("Stockfish has not yet exited, killing");
+                log!(self.log_file, "Stockfish has not yet exited, killing");
 
                 // We don't care if this succeeds or not, just send the signal.
                 // We're done with it and are trying to clean up.

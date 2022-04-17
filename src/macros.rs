@@ -1,5 +1,5 @@
 /*
- * main.rs
+ * macros.rs
  *
  * mallard-chess - Chess engine wrapper for fun
  * Copyright (C) 2022 Ammon Smith
@@ -10,22 +10,12 @@
  * WITHOUT ANY WARRANTY. See the LICENSE file for more details.
  */
 
-#[macro_use]
-mod macros;
+macro_rules! log {
+    ($file:expr $(,)?) => {
+        writeln!(&*$file).expect("Unable to write to log file")
+    };
 
-mod config;
-mod engine;
-mod game;
-mod score;
-mod stockfish;
-
-use self::config::Configuration;
-use self::game::Game;
-
-fn main() {
-    let config = Configuration::load();
-    let engine = config.engine_kind.build();
-    let mut game = Game::new(config);
-
-    game.main_loop(&*engine);
+    ($file:expr, $($arg:tt)+) => {
+        writeln!(&*$file, $($arg)+).expect("Unable to write to log file")
+    };
 }
