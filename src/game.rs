@@ -59,7 +59,13 @@ impl Game {
     /// Run only once to initialize the UCI connection.
     pub fn setup(&mut self) {
         match self.receive() {
-            UciMessage::Uci => self.send(UciMessage::UciOk),
+            UciMessage::Uci => {
+                self.send(UciMessage::UciOk);
+                self.send(UciMessage::Id {
+                    name: Some(env!("CARGO_PKG_NAME").into()),
+                    author: Some(env!("CARGO_PKG_AUTHORS").into()),
+                });
+            }
             UciMessage::Quit => process::exit(0),
             other => {
                 eprintln!("Unexpected UCI message on setup: {:#?}", other);
