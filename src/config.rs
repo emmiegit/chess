@@ -13,6 +13,7 @@
 use crate::engine::EngineKind;
 use clap::{Arg, Command};
 use std::convert::TryFrom;
+use std::fs::File;
 use std::process;
 
 #[cfg(target_os = "windows")]
@@ -23,6 +24,7 @@ const DEFAULT_LOG_PATH: &str = "/tmp/mallard-chess.log";
 
 #[derive(Debug)]
 pub struct Configuration {
+    pub log_file: File,
     pub engine_kind: EngineKind,
     pub stockfish_nodes: Option<u64>,
 }
@@ -61,6 +63,14 @@ impl Configuration {
             )
             .get_matches();
 
+        let log_file = {
+            let path = matches
+                .value_of_os("log-file")
+                .expect("Missing default argument");
+
+            File::create(path).expect("Unable to create log file")
+        };
+
         let stockfish_nodes = {
             let value = matches
                 .value_of("stockfish-nodes")
@@ -95,6 +105,7 @@ impl Configuration {
         };
 
         Configuration {
+            log_file,
             engine_kind,
             stockfish_nodes,
         }
