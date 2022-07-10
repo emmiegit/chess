@@ -1,7 +1,7 @@
 ## mallard-chess
 
-<a href="https://github.com/ammongit/chess/actions?query=workflow%3A%22Build%22">
-  <img src="https://github.com/ammongit/chess/workflows/Build/badge.svg"
+<a href="https://github.com/emmiegit/chess/actions?query=workflow%3A%22Build%22">
+  <img src="https://github.com/emmiegit/chess/workflows/Build/badge.svg"
        alt="Build status">
 </a>
 
